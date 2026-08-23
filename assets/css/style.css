@@ -62,3 +62,103 @@ body {
         transform: translateY(0);
     }
 }
+
+/* Audio Lab / Mini Sound Studio */
+.audio-lab-section {
+  display: flex;
+  justify-content: center;
+  padding: 40px 0 10px 0;
+  width: 100%;
+}
+
+.audio-card {
+  background: #ffffff;
+  border: 1px solid #e8e2dc;
+  border-radius: 28px;
+  padding: 32px;
+  max-width: 680px;
+  width: 100%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+  text-align: center;
+}
+
+.audio-card .badge {
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+  color: var(--color-rust);
+  background: rgba(176, 85, 47, 0.1);
+  padding: 4px 12px;
+  border-radius: 20px;
+  display: inline-block;
+  margin-bottom: 12px;
+}
+
+.audio-card h3 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--color-ink);
+  margin: 0 0 8px 0;
+  font-family: 'Inter', sans-serif;
+}
+
+.audio-card p {
+  color: var(--color-stone);
+  font-size: 15px;
+  margin-bottom: 24px;
+}
+
+.pad-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+  gap: 12px;
+}
+
+.sound-pad {
+  background: #fbf9f7;
+  border: 1.5px solid #ece6e1;
+  border-radius: 16px;
+  padding: 18px 10px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.sound-pad .key {
+  font-size: 11px;
+  font-weight: 700;
+  color: #999;
+  background: #eee8e1;
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+
+.sound-pad .label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+}
+
+.sound-pad:hover {
+  border-color: var(--color-rust);
+  transform: translateY(-2px);
+}
+
+.sound-pad.active {
+  background: var(--color-rust);
+  border-color: var(--color-rust);
+  transform: scale(0.95);
+}
+
+.sound-pad.active .key {
+  background: rgba(255, 255, 255, 0.3);
+  color: #fff;
+}
+
+.sound-pad.active .label {
+  color: #fff;
+}
