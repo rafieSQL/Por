@@ -883,10 +883,20 @@
             plantTimeout = setTimeout(setPlant, delay);
         }
 
+        function ensureAudioPlaying() {
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            if (!isWhacGameOver && bgmAudio.paused) {
+                bgmAudio.play().catch(e => console.log('BGM play prevented:', e));
+            }
+        }
+
         function selectWhacTile(tile) {
             if (isWhacGameOver) return;
 
             if (tile === currMoleTile) {
+                ensureAudioPlaying();
                 whacScore += 10;
                 document.getElementById('gameScore').innerText = whacScore.toString();
                 if (whacScore > whacHighScore) {
@@ -915,6 +925,7 @@
                 clearTimeout(plantTimeout);
                 
                 bgmAudio.pause(); // Stop background music
+                bgmAudio.currentTime = 0;
                 overAudio.currentTime = 0;
                 overAudio.play().catch(e => console.log('Audio autoplay prevented:', e)); // Play game over SFX
                 
@@ -932,6 +943,8 @@
 
                 document.getElementById('gameOverBanner').classList.remove('hidden');
                 document.getElementById('gameStartBtn').innerText = 'Coba Lagi 💥';
+            } else {
+                ensureAudioPlaying();
             }
         }
 
