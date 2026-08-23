@@ -815,8 +815,14 @@
         }
         
         function getSpeedModifier() {
-            // Accelerate speed: score 0 = multiplier 1, score 250 = multiplier 0.4 (max speed limit)
-            return Math.max(0.4, 1 - (whacScore / 250)); 
+            // Akselerasi mulai aktif jika skor sudah mencapai 100
+            if (whacScore < 100) {
+                return 1.0; // Kecepatan standar
+            }
+            // Setiap kenaikan 50 poin dari 100, kecepatan akan bertambah (delay berkurang 10%)
+            const extraSteps = Math.floor((whacScore - 100) / 50) + 1;
+            const multiplier = 1.0 - (extraSteps * 0.10);
+            return Math.max(0.35, multiplier); // Batas akselerasi maksimal 0.35x
         }
 
         function getRandomTileId() {
