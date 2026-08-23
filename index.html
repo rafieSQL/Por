@@ -210,40 +210,6 @@
                     </audio>
                 </div>
             </div>
-
-            <!-- Interactive Sound Studio / Audio Lab (Minimalist Beat & Brass Pad) -->
-            <div id="audio-lab" class="audio-lab-section mt-8">
-              <div class="audio-card">
-                <div class="audio-header">
-                  <span class="badge">INTERACTIVE LAB</span>
-                  <h3 class="font-inter">Mini Sound Studio</h3>
-                  <p class="font-mukta">Eksperimen ritme dan instrumen secara real-time via Web Audio API.</p>
-                </div>
-
-                <div class="pad-grid">
-                  <button class="sound-pad" data-sound="kick" aria-label="Kick Drum">
-                    <span class="key">A</span>
-                    <span class="label">Kick</span>
-                  </button>
-                  <button class="sound-pad" data-sound="snare" aria-label="Snare Drum">
-                    <span class="key">S</span>
-                    <span class="label">Snare</span>
-                  </button>
-                  <button class="sound-pad" data-sound="hihat" aria-label="Hi-Hat">
-                    <span class="key">D</span>
-                    <span class="label">Hi-Hat</span>
-                  </button>
-                  <button class="sound-pad" data-sound="brass" aria-label="Low Brass">
-                    <span class="key">F</span>
-                    <span class="label">Low Brass</span>
-                  </button>
-                  <button class="sound-pad" data-sound="melody" aria-label="Chime Melody">
-                    <span class="key">G</span>
-                    <span class="label">Chime</span>
-                  </button>
-                </div>
-              </div>
-            </div>
         </div>
     </section>
 
@@ -732,101 +698,12 @@
             }, 100);
         });
 
-        // Web Audio API Synthesizer (Interactive Sound Studio)
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
-        let audioCtxInstance;
-
-        function initAudio() {
-            if (!audioCtxInstance) {
-                audioCtxInstance = new AudioCtx();
-            }
-            if (audioCtxInstance.state === 'suspended') {
-                audioCtxInstance.resume();
-            }
-        }
-
-        function playSound(type) {
-            initAudio();
-            const now = audioCtxInstance.currentTime;
-            const osc = audioCtxInstance.createOscillator();
-            const gain = audioCtxInstance.createGain();
-            osc.connect(gain);
-            gain.connect(audioCtxInstance.destination);
-
-            if (type === 'kick') {
-                osc.frequency.setValueAtTime(130, now);
-                osc.frequency.exponentialRampToValueAtTime(0.01, now + 0.3);
-                gain.gain.setValueAtTime(1, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
-                osc.start(now);
-                osc.stop(now + 0.3);
-            } else if (type === 'snare') {
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(200, now);
-                gain.gain.setValueAtTime(0.7, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
-                osc.start(now);
-                osc.stop(now + 0.15);
-            } else if (type === 'hihat') {
-                osc.type = 'square';
-                osc.frequency.setValueAtTime(800, now);
-                gain.gain.setValueAtTime(0.3, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
-                osc.start(now);
-                osc.stop(now + 0.05);
-            } else if (type === 'brass') {
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(87.31, now); // F2 Low Brass Tone
-                gain.gain.setValueAtTime(0.6, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
-                osc.start(now);
-                osc.stop(now + 0.5);
-            } else if (type === 'melody') {
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(523.25, now); // C5 Chime Tone
-                gain.gain.setValueAtTime(0.5, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.6);
-                osc.start(now);
-                osc.stop(now + 0.6);
-            }
-        }
-
-        function initSoundPads() {
-            const pads = document.querySelectorAll('.sound-pad');
-            pads.forEach(pad => {
-                const trigger = (e) => {
-                    if (e) e.preventDefault();
-                    playSound(pad.dataset.sound);
-                    pad.classList.add('active');
-                    setTimeout(() => pad.classList.remove('active'), 150);
-                };
-                pad.addEventListener('click', trigger);
-                pad.addEventListener('touchstart', trigger, { passive: false });
-            });
-
-            // Keyboard shortcut listener (A, S, D, F, G)
-            const keyMap = { a: 'kick', s: 'snare', d: 'hihat', f: 'brass', g: 'melody' };
-            window.addEventListener('keydown', (e) => {
-                if (e.target && ['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return;
-                const sound = keyMap[e.key.toLowerCase()];
-                if (sound) {
-                    const targetPad = document.querySelector(`.sound-pad[data-sound="${sound}"]`);
-                    if (targetPad) {
-                        playSound(sound);
-                        targetPad.classList.add('active');
-                        setTimeout(() => targetPad.classList.remove('active'), 150);
-                    }
-                }
-            });
-        }
-
         // Initialize on DOM ready
         document.addEventListener('DOMContentLoaded', () => {
             initCardStack();
             startCardTimer();
             initCarousel();
             startCarouselTimer();
-            initSoundPads();
         });
     </script>
 </body>
