@@ -434,6 +434,54 @@
         </div>
     </section>
 
+    <!-- Whac-A-Mole Interactive Game Section (Arcade Easter Egg) -->
+    <section id="game" class="py-16 px-5 lg:px-20 max-w-5xl mx-auto">
+        <div class="relative overflow-hidden rounded-[36px] border border-ink/15 shadow-[0_16px_50px_rgba(26,23,20,0.06)]" style="background-image: url('assets/images/game/game_bg.png'); background-size: cover; background-position: center;">
+            <div class="absolute inset-0 bg-[#FBF9F4]/85 backdrop-blur-[2px]"></div>
+
+            <div class="relative z-10 p-6 sm:p-10 lg:p-12 text-center">
+                <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-rust/10 border border-rust/20 text-xs font-inter font-bold text-rust mb-3">
+                    🎮 INTERACTIVE ARCADE GAME
+                </span>
+                
+                <h2 class="font-inter text-2xl sm:text-3xl lg:text-4xl font-bold text-ink tracking-tight mb-2">
+                    Whac-A-Mole: Doggo Edition
+                </h2>
+                <p class="font-mukta text-stone text-sm sm:text-base max-w-xl mx-auto mb-8">
+                    Ketuk si <strong>Guguk 👍 (+10 Poin)</strong> saat muncul! Hati-hati, jangan sampai mengetuk si <strong>Kucing 🐱 (...)</strong> atau kamu langsung <strong>Game Over!</strong>
+                </p>
+
+                <!-- Game Status & Scoreboard -->
+                <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-6 mb-8">
+                    <div class="bg-white/90 backdrop-blur-md px-5 py-2.5 rounded-2xl border border-black/10 shadow-sm flex items-center gap-3">
+                        <span class="font-mukta text-xs text-stone uppercase tracking-wider font-bold">Skor:</span>
+                        <span id="gameScore" class="font-inter text-2xl font-extrabold text-rust">0</span>
+                    </div>
+
+                    <div class="bg-white/90 backdrop-blur-md px-5 py-2.5 rounded-2xl border border-black/10 shadow-sm flex items-center gap-3">
+                        <span class="font-mukta text-xs text-stone uppercase tracking-wider font-bold">Skor Tertinggi:</span>
+                        <span id="gameHighScore" class="font-inter text-2xl font-extrabold text-ink">0</span>
+                    </div>
+
+                    <button id="gameStartBtn" onclick="restartWhacGame()" class="px-6 py-3 rounded-2xl bg-ink text-white font-inter text-sm font-semibold hover:bg-rust transition-all shadow-md active:scale-95">
+                        Mulai Permainan 🎯
+                    </button>
+                </div>
+
+                <!-- Game Over Overlay Alert -->
+                <div id="gameOverBanner" class="hidden mb-6 p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 max-w-md mx-auto">
+                    <h4 class="font-inter font-bold text-rose-700 text-lg mb-0.5">💥 Game Over!</h4>
+                    <p class="font-mukta text-rose-800 text-sm">Kamu mengetuk si Kucing! Tekan tombol <strong>Mulai Permainan</strong> untuk mencoba lagi.</p>
+                </div>
+
+                <!-- 3x3 Game Board -->
+                <div id="gameBoard" class="arcade-board">
+                    <!-- 9 tiles will be dynamically rendered -->
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Footer -->
     <footer class="py-12 mt-10">
         <div class="max-w-7xl mx-auto px-5 lg:px-20 text-center border-t border-ink/10 pt-10 flex flex-col items-center gap-4">
@@ -698,12 +746,137 @@
             }, 100);
         });
 
+        // Whac-A-Mole Interactive Arcade Game (Kenny Yip Architecture with Custom Assets)
+        let currMoleTile = null;
+        let currPlantTile = null;
+        let whacScore = 0;
+        let whacHighScore = 0;
+        let isWhacGameOver = false;
+        let moleInterval = null;
+        let plantInterval = null;
+
+        function setWhacGame() {
+            const board = document.getElementById('gameBoard');
+            if (!board) return;
+            board.innerHTML = '';
+            currMoleTile = null;
+            currPlantTile = null;
+            whacScore = 0;
+            isWhacGameOver = false;
+            document.getElementById('gameScore').innerText = '0';
+            document.getElementById('gameOverBanner').classList.add('hidden');
+            document.getElementById('gameStartBtn').innerText = 'Main Ulang 🔄';
+
+            // 3x3 Grid (9 Tiles)
+            for (let i = 0; i < 9; i++) {
+                let tile = document.createElement('div');
+                tile.id = `whac-${i}`;
+                tile.className = 'arcade-tile flex items-center justify-center';
+                tile.addEventListener('click', () => selectWhacTile(tile));
+                tile.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    selectWhacTile(tile);
+                }, { passive: false });
+                board.appendChild(tile);
+            }
+
+            clearInterval(moleInterval);
+            clearInterval(plantInterval);
+
+            // Pop target every 1s, pop trap every 1.8s
+            moleInterval = setInterval(setMole, 1000);
+            plantInterval = setInterval(setPlant, 1800);
+        }
+
+        function getRandomTileId() {
+            let num = Math.floor(Math.random() * 9);
+            return `whac-${num}`;
+        }
+
+        function setMole() {
+            if (isWhacGameOver) return;
+            if (currMoleTile) {
+                currMoleTile.innerHTML = '';
+            }
+
+            let mole = document.createElement('img');
+            mole.src = 'assets/images/game/game_target.png';
+            mole.className = 'arcade-character';
+            mole.alt = 'Target Doggo';
+
+            let num = getRandomTileId();
+            if (currPlantTile && currPlantTile.id === num) {
+                return;
+            }
+            currMoleTile = document.getElementById(num);
+            if (currMoleTile) {
+                currMoleTile.appendChild(mole);
+            }
+        }
+
+        function setPlant() {
+            if (isWhacGameOver) return;
+            if (currPlantTile) {
+                currPlantTile.innerHTML = '';
+            }
+
+            let plant = document.createElement('img');
+            plant.src = 'assets/images/game/game_trap.png';
+            plant.className = 'arcade-character';
+            plant.alt = 'Trap Cat';
+
+            let num = getRandomTileId();
+            if (currMoleTile && currMoleTile.id === num) {
+                return;
+            }
+            currPlantTile = document.getElementById(num);
+            if (currPlantTile) {
+                currPlantTile.appendChild(plant);
+            }
+        }
+
+        function selectWhacTile(tile) {
+            if (isWhacGameOver) return;
+
+            if (tile === currMoleTile) {
+                whacScore += 10;
+                document.getElementById('gameScore').innerText = whacScore.toString();
+                if (whacScore > whacHighScore) {
+                    whacHighScore = whacScore;
+                    document.getElementById('gameHighScore').innerText = whacHighScore.toString();
+                }
+
+                let img = tile.querySelector('img');
+                if (img) {
+                    img.src = 'assets/images/game/game_target_hit.png';
+                }
+                setTimeout(() => {
+                    if (tile.innerHTML !== '' && tile === currMoleTile) {
+                        tile.innerHTML = '';
+                        currMoleTile = null;
+                    }
+                }, 180);
+
+            } else if (tile === currPlantTile) {
+                isWhacGameOver = true;
+                clearInterval(moleInterval);
+                clearInterval(plantInterval);
+                document.getElementById('gameOverBanner').classList.remove('hidden');
+                document.getElementById('gameStartBtn').innerText = 'Coba Lagi 💥';
+            }
+        }
+
+        function restartWhacGame() {
+            setWhacGame();
+        }
+
         // Initialize on DOM ready
         document.addEventListener('DOMContentLoaded', () => {
             initCardStack();
             startCardTimer();
             initCarousel();
             startCarouselTimer();
+            setWhacGame();
         });
     </script>
 </body>
