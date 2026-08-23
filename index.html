@@ -111,8 +111,18 @@
     <!-- About & Interests Section -->
     <section id="about" class="py-16 lg:py-24 px-5 lg:px-20 max-w-7xl mx-auto">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-            <!-- Text Content -->
-            <div class="order-1">
+            <!-- Interactive CardStack (Sebelah Kiri) -->
+            <div class="order-1 relative flex flex-col items-center justify-center py-4">
+                <div class="absolute inset-0 bg-rust/10 rounded-[44px] transform -rotate-2 scale-95 pointer-events-none"></div>
+                
+                <!-- CardStack Deck -->
+                <div id="cardStack" class="relative w-full max-w-[360px] sm:max-w-[420px] h-[360px] sm:h-[420px] cursor-pointer select-none" onclick="flipCardStack()" title="Klik untuk menggulir foto">
+                    <!-- Cards will be populated by CardStack JS -->
+                </div>
+            </div>
+
+            <!-- Text Content (Sebelah Kanan) -->
+            <div class="order-2">
                 <span class="text-rust font-inter text-xs font-bold uppercase tracking-wider">Eksplorasi & Kepribadian</span>
                 <h2 class="font-inter text-[34px] lg:text-[42px] font-bold text-ink mb-6 tracking-tight mt-1">Rasa Ingin Tahu Terhadap Dunia</h2>
                 <div class="space-y-5">
@@ -125,16 +135,6 @@
                     <p class="font-mukta text-[18px] text-stone leading-relaxed">
                         Di samping teknologi, jiwa saya sangat menikmati musik-musik orkestra dan klasik yang harmonis dan penuh kedisiplinan.
                     </p>
-                </div>
-            </div>
-
-            <!-- Interactive CardStack (Aceternity UI Style) -->
-            <div class="order-2 relative flex flex-col items-center justify-center py-4">
-                <div class="absolute inset-0 bg-rust/10 rounded-[44px] transform -rotate-2 scale-95 pointer-events-none"></div>
-                
-                <!-- CardStack Deck -->
-                <div id="cardStack" class="relative w-full max-w-[360px] sm:max-w-[420px] h-[360px] sm:h-[420px] cursor-pointer select-none" onclick="flipCardStack()" title="Klik untuk menggulir foto">
-                    <!-- Cards will be populated by CardStack JS -->
                 </div>
             </div>
         </div>
