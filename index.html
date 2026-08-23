@@ -752,8 +752,32 @@
         let whacScore = 0;
         let whacHighScore = 0;
         let isWhacGameOver = false;
-        let moleInterval = null;
-        let plantInterval = null;
+        let moleTimeout = null;
+        let plantTimeout = null;
+        
+        // Audio Elements
+        let bgmAudio = new Audio('assets/audio/game_bgm.webm');
+        bgmAudio.loop = true;
+        bgmAudio.volume = 0.5; // Supaya tidak terlalu keras
+        let overAudio = new Audio('assets/audio/game_over.webm');
+        overAudio.volume = 0.8;
+        
+        // Web Audio API for Cling SFX
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playCling() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(1400, audioCtx.currentTime); 
+            osc.frequency.exponentialRampToValueAtTime(2400, audioCtx.currentTime + 0.1);
+            gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.15);
+        }
 
         function setWhacGame() {
             const board = document.getElementById('gameBoard');
@@ -766,6 +790,12 @@
             document.getElementById('gameScore').innerText = '0';
             document.getElementById('gameOverBanner').classList.add('hidden');
             document.getElementById('gameStartBtn').innerText = 'Main Ulang 🔄';
+            
+            // Audio Reset & Play
+            bgmAudio.currentTime = 0;
+            overAudio.pause();
+            overAudio.currentTime = 0;
+            bgmAudio.play().catch(e => console.log('Audio autoplay prevented:', e));
 
             // 3x3 Grid (9 Tiles)
             for (let i = 0; i < 9; i++) {
@@ -780,12 +810,17 @@
                 board.appendChild(tile);
             }
 
-            clearInterval(moleInterval);
-            clearInterval(plantInterval);
+            clearTimeout(moleTimeout);
+            clearTimeout(plantTimeout);
 
-            // Pop target every 1s, pop trap every 1.8s
-            moleInterval = setInterval(setMole, 1000);
-            plantInterval = setInterval(setPlant, 1800);
+            // Pop target and trap using dynamic timeout logic
+            setMole();
+            setPlant();
+        }
+        
+        function getSpeedModifier() {
+            // Accelerate speed: score 0 = multiplier 1, score 250 = multiplier 0.4 (max speed limit)
+            return Math.max(0.4, 1 - (whacScore / 250)); 
         }
 
         function getRandomTileId() {
@@ -812,13 +847,15 @@
             mole.alt = 'Kamen Rider Baik';
 
             let num = getRandomTileId();
-            if (currPlantTile && currPlantTile.id === num) {
-                return;
+            if (!currPlantTile || currPlantTile.id !== num) {
+                currMoleTile = document.getElementById(num);
+                if (currMoleTile) {
+                    currMoleTile.appendChild(mole);
+                }
             }
-            currMoleTile = document.getElementById(num);
-            if (currMoleTile) {
-                currMoleTile.appendChild(mole);
-            }
+            
+            let delay = 1000 * getSpeedModifier();
+            moleTimeout = setTimeout(setMole, delay);
         }
 
         function setPlant() {
@@ -833,13 +870,15 @@
             plant.alt = 'Kamen Rider Jahat';
 
             let num = getRandomTileId();
-            if (currMoleTile && currMoleTile.id === num) {
-                return;
+            if (!currMoleTile || currMoleTile.id !== num) {
+                currPlantTile = document.getElementById(num);
+                if (currPlantTile) {
+                    currPlantTile.appendChild(plant);
+                }
             }
-            currPlantTile = document.getElementById(num);
-            if (currPlantTile) {
-                currPlantTile.appendChild(plant);
-            }
+            
+            let delay = 1800 * getSpeedModifier();
+            plantTimeout = setTimeout(setPlant, delay);
         }
 
         function selectWhacTile(tile) {
@@ -852,6 +891,8 @@
                     whacHighScore = whacScore;
                     document.getElementById('gameHighScore').innerText = whacHighScore.toString();
                 }
+                
+                playCling(); // Play custom *cling* Web Audio SFX
 
                 let img = tile.querySelector('img');
                 if (img) {
@@ -868,14 +909,19 @@
 
             } else if (tile === currPlantTile) {
                 isWhacGameOver = true;
-                clearInterval(moleInterval);
-                clearInterval(plantInterval);
+                clearTimeout(moleTimeout);
+                clearTimeout(plantTimeout);
+                
+                bgmAudio.pause(); // Stop background music
+                overAudio.play().catch(e => console.log('Audio autoplay prevented:', e)); // Play game over SFX
+                
                 document.getElementById('gameOverBanner').classList.remove('hidden');
                 document.getElementById('gameStartBtn').innerText = 'Coba Lagi 💥';
             }
         }
 
         function restartWhacGame() {
+            if(audioCtx.state === 'suspended') audioCtx.resume();
             setWhacGame();
         }
 
