@@ -440,10 +440,6 @@
             <div class="absolute inset-0 bg-[#FBF9F4]/85 backdrop-blur-[2px]"></div>
 
             <div class="relative z-10 p-6 sm:p-10 lg:p-12 text-center">
-                <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-rust/10 border border-rust/20 text-xs font-inter font-bold text-rust mb-3">
-                    🎮 INTERACTIVE ARCADE GAME
-                </span>
-                
                 <h2 class="font-inter text-2xl sm:text-3xl lg:text-4xl font-bold text-ink tracking-tight mb-2">
                     Whac-A-Wi
                 </h2>
@@ -470,8 +466,8 @@
 
                 <!-- Game Over Overlay Alert -->
                 <div id="gameOverBanner" class="hidden mb-6 p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 max-w-md mx-auto">
-                    <h4 class="font-inter font-bold text-rose-700 text-lg mb-0.5">💥 Game Over!</h4>
-                    <p class="font-mukta text-rose-800 text-sm">Kamu mengetuk Kamen Rider Jahat! Tekan tombol <strong>Mulai Permainan</strong> untuk mencoba lagi.</p>
+                    <h4 class="font-inter font-bold text-rose-700 text-lg mb-0.5">Game Over!</h4>
+                    <p id="gameOverReason" class="font-mukta text-rose-800 text-sm font-medium">Musuh telah ...</p>
                 </div>
 
                 <!-- 3x3 Game Board -->
@@ -913,8 +909,21 @@
                 clearTimeout(plantTimeout);
                 
                 bgmAudio.pause(); // Stop background music
+                overAudio.currentTime = 0;
                 overAudio.play().catch(e => console.log('Audio autoplay prevented:', e)); // Play game over SFX
                 
+                const gameOverReasons = [
+                    "mengkorupsi anda",
+                    "memonopoli daerah anda",
+                    "menghancurkan negara anda",
+                    "membeli lahan anda dengan harga murah"
+                ];
+                const selectedReason = gameOverReasons[Math.floor(Math.random() * gameOverReasons.length)];
+                const reasonElement = document.getElementById('gameOverReason');
+                if (reasonElement) {
+                    reasonElement.innerText = `Musuh telah ${selectedReason}.`;
+                }
+
                 document.getElementById('gameOverBanner').classList.remove('hidden');
                 document.getElementById('gameStartBtn').innerText = 'Coba Lagi 💥';
             }
