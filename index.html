@@ -445,10 +445,10 @@
                 </span>
                 
                 <h2 class="font-inter text-2xl sm:text-3xl lg:text-4xl font-bold text-ink tracking-tight mb-2">
-                    Whac-A-Mole: Doggo Edition
+                    Whac-A-Wi
                 </h2>
                 <p class="font-mukta text-stone text-sm sm:text-base max-w-xl mx-auto mb-8">
-                    Ketuk si <strong>Guguk 👍 (+10 Poin)</strong> saat muncul! Hati-hati, jangan sampai mengetuk si <strong>Kucing 🐱 (...)</strong> atau kamu langsung <strong>Game Over!</strong>
+                    Ketuk para <strong>Kamen Rider Baik (+10 Poin)</strong> saat muncul! Hati-hati, jangan sampai mengetuk <strong>Kamen Rider Jahat</strong> atau kamu langsung <strong>Game Over!</strong>
                 </p>
 
                 <!-- Game Status & Scoreboard -->
@@ -471,7 +471,7 @@
                 <!-- Game Over Overlay Alert -->
                 <div id="gameOverBanner" class="hidden mb-6 p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 max-w-md mx-auto">
                     <h4 class="font-inter font-bold text-rose-700 text-lg mb-0.5">💥 Game Over!</h4>
-                    <p class="font-mukta text-rose-800 text-sm">Kamu mengetuk si Kucing! Tekan tombol <strong>Mulai Permainan</strong> untuk mencoba lagi.</p>
+                    <p class="font-mukta text-rose-800 text-sm">Kamu mengetuk Kamen Rider Jahat! Tekan tombol <strong>Mulai Permainan</strong> untuk mencoba lagi.</p>
                 </div>
 
                 <!-- 3x3 Game Board -->
@@ -800,9 +800,16 @@
             }
 
             let mole = document.createElement('img');
-            mole.src = 'assets/images/game/game_target.png';
+            const goodRiders = [
+                'assets/images/game/rider_good_1.png', 
+                'assets/images/game/rider_good_2.png', 
+                'assets/images/game/rider_good_3.png', 
+                'assets/images/game/rider_good_4.png'
+            ];
+            const randomRider = goodRiders[Math.floor(Math.random() * goodRiders.length)];
+            mole.src = randomRider;
             mole.className = 'arcade-character';
-            mole.alt = 'Target Doggo';
+            mole.alt = 'Kamen Rider Baik';
 
             let num = getRandomTileId();
             if (currPlantTile && currPlantTile.id === num) {
@@ -821,9 +828,9 @@
             }
 
             let plant = document.createElement('img');
-            plant.src = 'assets/images/game/game_trap.png';
+            plant.src = 'assets/images/game/rider_evil.png';
             plant.className = 'arcade-character';
-            plant.alt = 'Trap Cat';
+            plant.alt = 'Kamen Rider Jahat';
 
             let num = getRandomTileId();
             if (currMoleTile && currMoleTile.id === num) {
@@ -848,14 +855,16 @@
 
                 let img = tile.querySelector('img');
                 if (img) {
-                    img.src = 'assets/images/game/game_target_hit.png';
+                    // Animasi mengecil dan hilang saat ditekan
+                    img.style.transform = 'scale(0)';
+                    img.style.transition = 'transform 0.15s ease';
                 }
                 setTimeout(() => {
                     if (tile.innerHTML !== '' && tile === currMoleTile) {
                         tile.innerHTML = '';
                         currMoleTile = null;
                     }
-                }, 180);
+                }, 150);
 
             } else if (tile === currPlantTile) {
                 isWhacGameOver = true;
