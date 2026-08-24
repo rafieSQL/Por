@@ -112,7 +112,7 @@
             </div>
         </div>
         <div class="lg:w-[45%] relative mt-8 lg:mt-0 flex justify-center lg:justify-end hero-rise hero-rise-3">
-            <img src="assets/images/profile.jpg" alt="Muhammad Rafie Rabbani" class="w-[80%] max-w-[400px] rounded-[32px] shadow-2xl object-cover relative z-10 rotate-2 hover:rotate-0 transition-transform duration-500 border-4 border-white/80" style="aspect-ratio: 3/4;">
+            <img src="assets/images/profile.jpg" alt="Muhammad Rafie Rabbani" class="w-[80%] max-w-[400px] rounded-[32px] shadow-2xl object-cover relative z-10 rotate-2 hover:rotate-0 transition-transform duration-500 border-4 border-white/80" style="aspect-ratio: 3/4;" fetchpriority="high" loading="eager" decoding="sync">
         </div>
     </section>
 
@@ -221,9 +221,9 @@
                     <div class="relative w-48 h-48 lg:w-56 lg:h-56 drop-shadow-xl transition-transform duration-500 hover:scale-105">
                         <div id="vinylRecord" class="w-full h-full relative origin-center animate-[spin_4s_linear_infinite]" style="animation-play-state: paused;">
                             <!-- Vinyl disc -->
-                            <img src="assets/images/vinyl.png" alt="Vinyl Record" class="w-full h-full object-contain z-10 relative pointer-events-none">
+                            <img src="assets/images/vinyl.png" alt="Vinyl Record" class="w-full h-full object-contain z-10 relative pointer-events-none" loading="lazy" decoding="async">
                             <!-- Album Cover (Label) -->
-                            <img src="assets/images/album_cover.png" alt="The Planets Album Cover" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[35%] h-[35%] rounded-full object-cover z-20 pointer-events-none shadow-inner border border-black/10">
+                            <img src="assets/images/album_cover.png" alt="The Planets Album Cover" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[35%] h-[35%] rounded-full object-cover z-20 pointer-events-none shadow-inner border border-black/10" loading="lazy" decoding="async">
                             <!-- Spindle Hole -->
                             <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-[#FBF9F4] rounded-full z-30 shadow-inner border border-black/20"></div>
                         </div>
@@ -295,7 +295,7 @@
         <button class="absolute top-6 right-6 size-11 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-white/20 transition-colors text-xl font-bold">
             ✕
         </button>
-        <img id="lightboxImg" src="" alt="Enlarged view" class="max-w-[92vw] max-h-[88vh] rounded-2xl object-contain shadow-2xl border border-white/10" onclick="event.stopPropagation()">
+        <img id="lightboxImg" src="" alt="Enlarged view" class="max-w-[92vw] max-h-[88vh] rounded-2xl object-contain shadow-2xl border border-white/10" onclick="event.stopPropagation()" loading="lazy" decoding="async">
     </div>
 
     <!-- Organization Experience -->
@@ -474,7 +474,7 @@
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-2xl mx-auto mb-8 text-left">
                     <div class="bg-white/85 backdrop-blur-md border border-emerald-500/20 p-3.5 rounded-2xl flex items-center gap-3 shadow-sm">
                         <div class="size-10 bg-emerald-500/10 flex items-center justify-center text-xl shrink-0">
-                            <img src="assets/images/game/icon_rider_baik.png" alt="Rider Baik" class="w-8 h-8 object-cover" />
+                            <img src="assets/images/game/icon_rider_baik.png" alt="Rider Baik" class="w-8 h-8 object-cover" loading="lazy" decoding="async" />
                         </div>
                         <div>
                             <span class="block font-inter text-xs font-bold text-emerald-800 uppercase tracking-wider">Rider Baik</span>
@@ -483,7 +483,7 @@
                     </div>
                     <div class="bg-white/85 backdrop-blur-md border border-rose-500/20 p-3.5 rounded-2xl flex items-center gap-3 shadow-sm">
                         <div class="size-10 bg-rose-500/10 flex items-center justify-center text-xl shrink-0">
-                            <img src="assets/images/game/icon_rider_jahat.png" alt="Rider Jahat" class="w-8 h-8 object-cover" />
+                            <img src="assets/images/game/icon_rider_jahat.png" alt="Rider Jahat" class="w-8 h-8 object-cover" loading="lazy" decoding="async" />
                         </div>
                         <div>
                             <span class="block font-inter text-xs font-bold text-rose-800 uppercase tracking-wider">Rider Jahat</span>
@@ -492,7 +492,7 @@
                     </div>
                     <div class="bg-white/85 backdrop-blur-md border border-amber-500/20 p-3.5 rounded-2xl flex items-center gap-3 shadow-sm">
                         <div class="size-10 bg-amber-500/10 flex items-center justify-center text-xl shrink-0">
-                            <img src="assets/images/game/icon_akselerasi.png" alt="Akselerasi" class="w-8 h-8 object-cover" />
+                            <img src="assets/images/game/icon_akselerasi.png" alt="Akselerasi" class="w-8 h-8 object-cover" loading="lazy" decoding="async" />
                         </div>
                         <div>
                             <span class="block font-inter text-xs font-bold text-amber-800 uppercase tracking-wider">Akselerasi</span>
