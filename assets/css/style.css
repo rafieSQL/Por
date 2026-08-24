@@ -1,4 +1,4 @@
-﻿/* Muhammad Rafie Rabbani - Portfolio Custom Stylesheet (Performance Optimized) */
+/* Muhammad Rafie Rabbani - Portfolio Custom Stylesheet (Performance Optimized) */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Mukta:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,600&display=swap');
 
@@ -63,7 +63,7 @@ body {
     }
 }
 
-/* Whac-A-Mole Arcade Game Styling */
+
 .arcade-board {
     display: grid;
     grid-template-columns: repeat(3, 1fr);

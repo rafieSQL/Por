@@ -47,10 +47,47 @@
             animation: hero-rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             opacity: 0;
             transform: translateY(20px);
+            transform: translateY(30px);
+            transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .hero-rise-1 { animation-delay: 0.1s; }
-        .hero-rise-2 { animation-delay: 0.2s; }
-        .hero-rise-3 { animation-delay: 0.3s; }
+        .hero-rise.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .hero-rise-1 { transition-delay: 0.1s; }
+        .hero-rise-2 { transition-delay: 0.3s; }
+        .hero-rise-3 { transition-delay: 0.5s; }
+        
+        /* Typing Game Styles */
+        #typing-text span {
+            position: relative;
+        }
+        #typing-text span.correct {
+            color: #47AB19;
+            font-weight: 500;
+        }
+        #typing-text span.incorrect {
+            color: #cb3439;
+            background: #ffc0cb;
+            border-radius: 4px;
+        }
+        #typing-text span.active {
+            color: #B0552F;
+        }
+        #typing-text span.active::before {
+            position: absolute;
+            content: "";
+            height: 2px;
+            width: 100%;
+            bottom: -2px;
+            left: 0;
+            border-radius: 5px;
+            background: #B0552F;
+            animation: blink 1s ease-in-out infinite;
+        }
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
         @keyframes hero-rise {
             to {
                 opacity: 1;
@@ -464,87 +501,53 @@
         </div>
     </section>
 
-    <!-- Whac-A-Mole Interactive Game Section (Arcade Easter Egg) -->
+    <!-- Permainan Tes Kecepatan Mengetik (WPM TEST) -->
     <section id="game" class="py-16 px-5 lg:px-20 max-w-5xl mx-auto">
-        <div class="relative overflow-hidden rounded-[36px] border border-ink/15 shadow-[0_16px_50px_rgba(26,23,20,0.06)]" style="background-image: url('assets/images/game/game_bg.png'); background-size: cover; background-position: center;">
-            <div class="absolute inset-0 bg-[#FBF9F4]/85 backdrop-blur-[2px]"></div>
+        <div class="relative overflow-hidden rounded-[36px] bg-[#FBF9F4] border border-ink/15 shadow-[0_16px_50px_rgba(26,23,20,0.06)] p-6 sm:p-10 lg:p-12 text-center">
+            
+            <h2 class="font-inter text-2xl sm:text-3xl lg:text-4xl font-bold text-ink tracking-tight mb-2">
+                Tes Kecepatan Mengetik ⌨️
+            </h2>
+            <p class="font-mukta text-stone text-sm sm:text-base max-w-xl mx-auto mb-8">
+                Berapa banyak kata yang bisa kamu ketik dalam satu menit? Ketik teks di bawah secepat dan setepat mungkin!
+            </p>
 
-            <div class="relative z-10 p-6 sm:p-10 lg:p-12 text-center">
-                <h2 class="font-inter text-2xl sm:text-3xl lg:text-4xl font-bold text-ink tracking-tight mb-2">
-                    Whac-A-Wi
-                </h2>
-                <p class="font-mukta text-stone text-sm sm:text-base max-w-xl mx-auto mb-6">
-                    Uji ketangkasan refleksmu! Tekan tombol <strong>Mulai Permainan</strong> di bawah untuk memulai.
-                </p>
-
-                <!-- Cara Bermain (Visual Guide) -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-2xl mx-auto mb-8 text-left">
-                    <div class="bg-white/85 backdrop-blur-md border border-emerald-500/20 p-3.5 rounded-2xl flex items-center gap-3 shadow-sm">
-                        <div class="size-10 bg-emerald-500/10 flex items-center justify-center text-xl shrink-0">
-                            <img src="assets/images/game/icon_rider_baik.png" alt="Rider Baik" class="w-8 h-8 object-cover" loading="lazy" decoding="async" />
-                        </div>
-                        <div>
-                            <span class="block font-inter text-xs font-bold text-emerald-800 uppercase tracking-wider">Rider Baik</span>
-                            <span class="font-mukta text-xs text-stone">Ketuk untuk raih <strong>+10 Poin</strong></span>
-                        </div>
-                    </div>
-                    <div class="bg-white/85 backdrop-blur-md border border-rose-500/20 p-3.5 rounded-2xl flex items-center gap-3 shadow-sm">
-                        <div class="size-10 bg-rose-500/10 flex items-center justify-center text-xl shrink-0">
-                            <img src="assets/images/game/icon_rider_jahat.png" alt="Rider Jahat" class="w-8 h-8 object-cover" loading="lazy" decoding="async" />
-                        </div>
-                        <div>
-                            <span class="block font-inter text-xs font-bold text-rose-800 uppercase tracking-wider">Rider Jahat</span>
-                            <span class="font-mukta text-xs text-stone">Jangan diketuk! <strong>Game Over</strong></span>
-                        </div>
-                    </div>
-                    <div class="bg-white/85 backdrop-blur-md border border-amber-500/20 p-3.5 rounded-2xl flex items-center gap-3 shadow-sm">
-                        <div class="size-10 bg-amber-500/10 flex items-center justify-center text-xl shrink-0">
-                            <img src="assets/images/game/icon_akselerasi.png" alt="Akselerasi" class="w-8 h-8 object-cover" loading="lazy" decoding="async" />
-                        </div>
-                        <div>
-                            <span class="block font-inter text-xs font-bold text-amber-800 uppercase tracking-wider">Akselerasi</span>
-                            <span class="font-mukta text-xs text-stone">Makin cepat tiap <strong>+50 Skor</strong> (Mulai 100)</span>
-                        </div>
-                    </div>
+            <!-- Typing Interface -->
+            <div class="bg-white rounded-[24px] shadow-sm border border-ink/10 p-6 sm:p-8 relative text-left">
+                <!-- Hidden input field -->
+                <input type="text" id="typing-input" class="opacity-0 absolute -z-10 w-0 h-0">
+                
+                <!-- Typing Text Box -->
+                <div class="max-h-[160px] sm:max-h-[200px] overflow-hidden cursor-pointer rounded-xl bg-black/5 p-5 border border-ink/5" id="typing-text-container">
+                    <p id="typing-text" class="font-mukta text-lg sm:text-xl text-stone/80 leading-relaxed tracking-wide select-none"></p>
                 </div>
-
+                
                 <!-- Game Status & Scoreboard -->
-                <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-6 mb-8">
-                    <div class="bg-white/90 backdrop-blur-md px-5 py-2.5 rounded-2xl border border-black/10 shadow-sm flex items-center gap-3">
-                        <span class="font-mukta text-xs text-stone uppercase tracking-wider font-bold">Skor:</span>
-                        <span id="gameScore" class="font-inter text-2xl font-extrabold text-rust">0</span>
-                    </div>
-
-                    <div class="bg-white/90 backdrop-blur-md px-5 py-2.5 rounded-2xl border border-black/10 shadow-sm flex items-center gap-3">
-                        <span class="font-mukta text-xs text-stone uppercase tracking-wider font-bold">Skor Tertinggi:</span>
-                        <span id="gameHighScore" class="font-inter text-2xl font-extrabold text-ink">0</span>
-                    </div>
-
-                    <div class="flex items-center gap-3">
-                        <button id="gameStartBtn" onclick="restartWhacGame()" class="px-6 py-3 rounded-2xl bg-ink text-white font-inter text-sm font-semibold hover:bg-rust transition-all shadow-md active:scale-95">
-                            Mulai Permainan 🎯
-                        </button>
-                        <button id="gameStopBtn" onclick="stopWhacGame()" class="px-5 py-3 rounded-2xl bg-stone/15 text-ink font-inter text-sm font-semibold hover:bg-rose-500 hover:text-white transition-all active:scale-95" title="Hentikan Permainan">
-                            Berhenti ⏹️
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Game Paused / Stopped Banner -->
-                <div id="gamePausedBanner" class="hidden mb-6 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 max-w-md mx-auto">
-                    <h4 class="font-inter font-bold text-amber-800 text-lg mb-0.5">Permainan Dihentikan ⏸️</h4>
-                    <p class="font-mukta text-amber-900 text-sm">Permainan dan musik telah dijeda. Tekan <strong>Mulai Permainan</strong> untuk bermain kembali!</p>
-                </div>
-
-                <!-- Game Over Overlay Alert -->
-                <div id="gameOverBanner" class="hidden mb-6 p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 max-w-md mx-auto">
-                    <h4 class="font-inter font-bold text-rose-700 text-lg mb-0.5">Game Over!</h4>
-                    <p id="gameOverReason" class="font-mukta text-rose-800 text-sm font-medium">Musuh telah ...</p>
-                </div>
-
-                <!-- 3x3 Game Board -->
-                <div id="gameBoard" class="arcade-board">
-                    <!-- 9 tiles will be dynamically rendered -->
+                <div class="mt-8 pt-6 border-t border-ink/10 flex flex-wrap items-center justify-between gap-6">
+                    <!-- Stats -->
+                    <ul class="flex flex-wrap items-center gap-6 sm:gap-10 w-full sm:w-auto">
+                        <li class="flex flex-col">
+                            <span class="font-mukta text-[11px] sm:text-xs text-stone uppercase tracking-wider font-bold mb-1">Sisa Waktu</span>
+                            <span class="font-inter text-2xl font-extrabold text-ink"><b id="time-left">60</b>s</span>
+                        </li>
+                        <li class="flex flex-col relative pl-6 sm:pl-10 before:content-[''] before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:h-8 before:w-px before:bg-ink/10">
+                            <span class="font-mukta text-[11px] sm:text-xs text-stone uppercase tracking-wider font-bold mb-1">Kesalahan</span>
+                            <span id="mistake-count" class="font-inter text-2xl font-extrabold text-rust">0</span>
+                        </li>
+                        <li class="flex flex-col relative pl-6 sm:pl-10 before:content-[''] before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:h-8 before:w-px before:bg-ink/10">
+                            <span class="font-mukta text-[11px] sm:text-xs text-stone uppercase tracking-wider font-bold mb-1">WPM</span>
+                            <span id="wpm-score" class="font-inter text-2xl font-extrabold text-[#47AB19]">0</span>
+                        </li>
+                        <li class="flex flex-col relative pl-6 sm:pl-10 before:content-[''] before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:h-8 before:w-px before:bg-ink/10">
+                            <span class="font-mukta text-[11px] sm:text-xs text-stone uppercase tracking-wider font-bold mb-1">CPM</span>
+                            <span id="cpm-score" class="font-inter text-2xl font-extrabold text-ink">0</span>
+                        </li>
+                    </ul>
+                    
+                    <!-- Action -->
+                    <button id="try-again-btn" class="w-full sm:w-auto bg-rust text-white font-semibold font-inter text-sm px-8 py-3.5 rounded-full hover:bg-[#9A4826] active:scale-95 transition-all shadow-md">
+                        Coba Lagi 🔄
+                    </button>
                 </div>
             </div>
         </div>
@@ -860,272 +863,111 @@
             }, 100);
         });
 
-        // Whac-A-Mole Interactive Arcade Game (Kenny Yip Architecture with Custom Assets)
-        let currMoleTile = null;
-        let currPlantTile = null;
-        let whacScore = 0;
-        let whacHighScore = 0;
-        let isGameActive = false; // Standby state saat awal halaman dimuat
-        let isWhacGameOver = false;
-        let moleTimeout = null;
-        let plantTimeout = null;
-        
-        // Audio Elements
-        let bgmAudio = new Audio('assets/audio/game_bgm.m4a');
-        bgmAudio.loop = true;
-        bgmAudio.volume = 0.5; // Supaya pas dan nyaman
-        let overAudio = new Audio('assets/audio/game_over.webm');
-        overAudio.volume = 0.8;
-        
-        // Web Audio API for Cling SFX
-        let audioCtx = null;
-        function getAudioContext() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            }
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-            return audioCtx;
+        // Typing Speed Test Game Logic
+        const typingParagraphs = [
+            "Musik dan teknologi adalah dua dunia yang saling melengkapi. Ketika saya bermain alat musik, saya merasakan ritme dan pola yang terstruktur, sama seperti ketika saya menulis kode program. Keduanya membutuhkan ketelitian, dedikasi, dan kreativitas untuk menghasilkan karya yang fungsional.",
+            "Sebagai seorang siswa, saya selalu berusaha menyeimbangkan antara kehidupan akademis, organisasi, dan hobi. Waktu adalah aset yang paling berharga, dan manajemen waktu yang baik memungkinkan saya untuk tetap berprestasi di kelas sambil terus mengembangkan keterampilan di bidang kecerdasan buatan.",
+            "Marching band mengajarkan saya tentang arti kerja sama tim, kedisiplinan, dan kepemimpinan. Dalam sebuah penampilan, setiap anggota memiliki peran penting. Jika satu orang melakukan kesalahan, seluruh harmoni dapat terganggu. Hal ini mengajarkan saya untuk selalu memberikan yang terbaik.",
+            "Dunia teknologi berkembang dengan sangat pesat setiap harinya. Mempelajari bahasa pemrograman baru, memahami algoritma kompleks, dan merancang antarmuka pengguna yang ramah adalah tantangan yang menyenangkan. Saya selalu menantang diri sendiri untuk membuat proyek yang berdampak positif."
+        ];
+
+        const typingText = document.querySelector("#typing-text");
+        const inpField = document.querySelector("#typing-input");
+        const tryAgainBtn = document.querySelector("#try-again-btn");
+        const timeTag = document.querySelector("#time-left");
+        const mistakeTag = document.querySelector("#mistake-count");
+        const wpmTag = document.querySelector("#wpm-score");
+        const cpmTag = document.querySelector("#cpm-score");
+        const typingContainer = document.querySelector("#typing-text-container");
+
+        let timer;
+        let maxTime = 60;
+        let timeLeft = maxTime;
+        let charIndex = 0;
+        let mistakes = 0;
+        let isTyping = false;
+
+        function loadParagraph() {
+            const ranIndex = Math.floor(Math.random() * typingParagraphs.length);
+            typingText.innerHTML = "";
+            typingParagraphs[ranIndex].split("").forEach(char => {
+                let span = `<span>${char}</span>`;
+                typingText.innerHTML += span;
+            });
+            typingText.querySelectorAll("span")[0].classList.add("active");
+            document.addEventListener("keydown", () => inpField.focus());
+            typingContainer.addEventListener("click", () => inpField.focus());
         }
 
-        function playCling() {
-            try {
-                const ctx = getAudioContext();
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(1400, ctx.currentTime); 
-                osc.frequency.exponentialRampToValueAtTime(2400, ctx.currentTime + 0.1);
-                gain.gain.setValueAtTime(0.4, ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                osc.start();
-                osc.stop(ctx.currentTime + 0.15);
-            } catch(e) {
-                console.log('Audio error:', e);
-            }
-        }
-
-        // Inisialisasi grid papan kosong saat web pertama kali dimuat (tidak langsung autoplay)
-        function initWhacGameBoard() {
-            const board = document.getElementById('gameBoard');
-            if (!board) return;
-            board.innerHTML = '';
-            currMoleTile = null;
-            currPlantTile = null;
-            isGameActive = false;
-            isWhacGameOver = false;
-            whacScore = 0;
-            document.getElementById('gameScore').innerText = '0';
-            document.getElementById('gameStartBtn').innerText = 'Mulai Permainan 🎯';
+        function initTyping() {
+            let characters = typingText.querySelectorAll("span");
+            let typedChar = inpField.value.split("")[charIndex];
             
-            // Render 9 kotak papan kosong
-            for (let i = 0; i < 9; i++) {
-                let tile = document.createElement('div');
-                tile.id = `whac-${i}`;
-                tile.className = 'arcade-tile flex items-center justify-center';
-                tile.addEventListener('click', () => selectWhacTile(tile));
-                tile.addEventListener('touchstart', (e) => {
-                    e.preventDefault();
-                    selectWhacTile(tile);
-                }, { passive: false });
-                board.appendChild(tile);
-            }
-        }
-
-        // Dipanggil hanya ketika tombol 'Mulai Permainan' ditekan secara eksplisit
-        function startWhacGame() {
-            getAudioContext();
-
-            isGameActive = true;
-            isWhacGameOver = false;
-            whacScore = 0;
-            document.getElementById('gameScore').innerText = '0';
-            
-            const gameOverBanner = document.getElementById('gameOverBanner');
-            if (gameOverBanner) gameOverBanner.classList.add('hidden');
-            const pausedBanner = document.getElementById('gamePausedBanner');
-            if (pausedBanner) pausedBanner.classList.add('hidden');
-            
-            document.getElementById('gameStartBtn').innerText = 'Main Ulang 🔄';
-
-            // Bersihkan sisa karakter sebelumnya jika ada
-            if (currMoleTile) { currMoleTile.innerHTML = ''; currMoleTile = null; }
-            if (currPlantTile) { currPlantTile.innerHTML = ''; currPlantTile = null; }
-
-            clearTimeout(moleTimeout);
-            clearTimeout(plantTimeout);
-
-            // Putar BGM
-            bgmAudio.currentTime = 0;
-            overAudio.pause();
-            overAudio.currentTime = 0;
-            bgmAudio.play().catch(e => console.log('BGM play prevented:', e));
-
-            // Jalankan loop kemunculan karakter
-            setMole();
-            setPlant();
-        }
-        
-        function getSpeedModifier() {
-            // Akselerasi mulai aktif jika skor sudah mencapai 100
-            if (whacScore < 100) {
-                return 1.0; // Kecepatan standar
-            }
-            // Setiap kenaikan 50 poin dari 100, kecepatan akan bertambah (delay berkurang 10%)
-            const extraSteps = Math.floor((whacScore - 100) / 50) + 1;
-            const multiplier = 1.0 - (extraSteps * 0.10);
-            return Math.max(0.35, multiplier); // Batas akselerasi maksimal 0.35x
-        }
-
-        function getRandomTileId() {
-            let num = Math.floor(Math.random() * 9);
-            return `whac-${num}`;
-        }
-
-        function setMole() {
-            if (!isGameActive || isWhacGameOver) return;
-            if (currMoleTile) {
-                currMoleTile.innerHTML = '';
-                currMoleTile = null;
-            }
-
-            let mole = document.createElement('img');
-            const goodRiders = [
-                'assets/images/game/rider_good_1.png', 
-                'assets/images/game/rider_good_2.png', 
-                'assets/images/game/rider_good_3.png', 
-                'assets/images/game/rider_good_4.png'
-            ];
-            const randomRider = goodRiders[Math.floor(Math.random() * goodRiders.length)];
-            mole.src = randomRider;
-            mole.className = 'arcade-character';
-            mole.alt = 'Kamen Rider Baik';
-
-            let num = getRandomTileId();
-            if (!currPlantTile || currPlantTile.id !== num) {
-                currMoleTile = document.getElementById(num);
-                if (currMoleTile) {
-                    currMoleTile.appendChild(mole);
-                }
-            }
-            
-            let delay = 1000 * getSpeedModifier();
-            moleTimeout = setTimeout(setMole, delay);
-        }
-
-        function setPlant() {
-            if (!isGameActive || isWhacGameOver) return;
-            if (currPlantTile) {
-                currPlantTile.innerHTML = '';
-                currPlantTile = null;
-            }
-
-            let plant = document.createElement('img');
-            plant.src = 'assets/images/game/rider_evil.png';
-            plant.className = 'arcade-character';
-            plant.alt = 'Kamen Rider Jahat';
-
-            let num = getRandomTileId();
-            if (!currMoleTile || currMoleTile.id !== num) {
-                currPlantTile = document.getElementById(num);
-                if (currPlantTile) {
-                    currPlantTile.appendChild(plant);
-                }
-            }
-            
-            let delay = 1800 * getSpeedModifier();
-            plantTimeout = setTimeout(setPlant, delay);
-        }
-
-        function selectWhacTile(tile) {
-            // Jika game belum dimulai atau sudah selesai, klik diabaikan (bebas bug)
-            if (!isGameActive || isWhacGameOver) return;
-
-            if (tile === currMoleTile) {
-                whacScore += 10;
-                document.getElementById('gameScore').innerText = whacScore.toString();
-                if (whacScore > whacHighScore) {
-                    whacHighScore = whacScore;
-                    document.getElementById('gameHighScore').innerText = whacHighScore.toString();
+            if (charIndex < characters.length - 1 && timeLeft > 0) {
+                if (!isTyping) {
+                    timer = setInterval(initTimer, 1000);
+                    isTyping = true;
                 }
                 
-                playCling(); // Play custom *cling* Web Audio SFX
-
-                let img = tile.querySelector('img');
-                if (img) {
-                    // Animasi mengecil dan hilang saat ditekan
-                    img.style.transform = 'scale(0)';
-                    img.style.transition = 'transform 0.15s ease';
-                }
-                setTimeout(() => {
-                    if (tile.innerHTML !== '' && tile === currMoleTile) {
-                        tile.innerHTML = '';
-                        currMoleTile = null;
+                if (typedChar == null) {
+                    if (charIndex > 0) {
+                        charIndex--;
+                        if (characters[charIndex].classList.contains("incorrect")) {
+                            mistakes--;
+                        }
+                        characters[charIndex].className = ""; // clear classes
                     }
-                }, 150);
-
-            } else if (tile === currPlantTile) {
-                isGameActive = false;
-                isWhacGameOver = true;
-                clearTimeout(moleTimeout);
-                clearTimeout(plantTimeout);
+                } else {
+                    if (characters[charIndex].innerText === typedChar) {
+                        characters[charIndex].classList.add("correct");
+                    } else {
+                        mistakes++;
+                        characters[charIndex].classList.add("incorrect");
+                    }
+                    charIndex++;
+                }
                 
-                bgmAudio.pause(); // Stop background music
-                bgmAudio.currentTime = 0;
-                overAudio.currentTime = 0;
-                overAudio.play().catch(e => console.log('Audio autoplay prevented:', e)); // Play game over SFX
-                
-                const gameOverReasons = [
-                    "mengkorupsi anda",
-                    "memonopoli daerah anda",
-                    "menghancurkan negara anda",
-                    "membeli lahan anda dengan harga murah"
-                ];
-                const selectedReason = gameOverReasons[Math.floor(Math.random() * gameOverReasons.length)];
-                const reasonElement = document.getElementById('gameOverReason');
-                if (reasonElement) {
-                    reasonElement.innerText = `Musuh telah ${selectedReason}.`;
+                characters.forEach(span => span.classList.remove("active"));
+                if (charIndex < characters.length) {
+                    characters[charIndex].classList.add("active");
                 }
 
-                document.getElementById('gameOverBanner').classList.remove('hidden');
-                document.getElementById('gameStartBtn').innerText = 'Coba Lagi 💥';
+                let wpm = Math.round(((charIndex - mistakes) / 5) / (maxTime - timeLeft) * 60);
+                wpm = wpm < 0 || !wpm || wpm === Infinity ? 0 : wpm;
+                
+                wpmTag.innerText = wpm;
+                mistakeTag.innerText = mistakes;
+                cpmTag.innerText = charIndex - mistakes;
+            } else {
+                clearInterval(timer);
+                inpField.value = "";
             }
         }
 
-        function stopWhacGame() {
-            isGameActive = false;
-            isWhacGameOver = true;
-            clearTimeout(moleTimeout);
-            clearTimeout(plantTimeout);
-            
-            // Hentikan BGM
-            bgmAudio.pause();
-            bgmAudio.currentTime = 0;
-            overAudio.pause();
-            overAudio.currentTime = 0;
-
-            // Bersihkan karakter di grid
-            if (currMoleTile) {
-                currMoleTile.innerHTML = '';
-                currMoleTile = null;
+        function initTimer() {
+            if (timeLeft > 0) {
+                timeLeft--;
+                timeTag.innerText = timeLeft;
+                let wpm = Math.round(((charIndex - mistakes) / 5) / (maxTime - timeLeft) * 60);
+                wpm = wpm < 0 || !wpm || wpm === Infinity ? 0 : wpm;
+                wpmTag.innerText = wpm;
+            } else {
+                clearInterval(timer);
             }
-            if (currPlantTile) {
-                currPlantTile.innerHTML = '';
-                currPlantTile = null;
-            }
-
-            // Sembunyikan Game Over dan tampilkan status Berhenti
-            document.getElementById('gameOverBanner').classList.add('hidden');
-            const pausedBanner = document.getElementById('gamePausedBanner');
-            if (pausedBanner) pausedBanner.classList.remove('hidden');
-            document.getElementById('gameStartBtn').innerText = 'Mulai Permainan 🎯';
         }
 
-        function restartWhacGame() {
-            startWhacGame();
+        function resetTypingGame() {
+            loadParagraph();
+            clearInterval(timer);
+            timeLeft = maxTime;
+            charIndex = 0;
+            mistakes = 0;
+            isTyping = false;
+            inpField.value = "";
+            timeTag.innerText = timeLeft;
+            wpmTag.innerText = 0;
+            mistakeTag.innerText = 0;
+            cpmTag.innerText = 0;
         }
 
         // Initialize on DOM ready
@@ -1134,7 +976,11 @@
             startCardTimer();
             initCarousel();
             startCarouselTimer();
-            initWhacGameBoard(); // Siapkan papan dalam mode Standby (tidak autoplay)
+            
+            // Init Typing Test
+            loadParagraph();
+            inpField.addEventListener("input", initTyping);
+            tryAgainBtn.addEventListener("click", resetTypingGame);
 
             // Carousel: Mouse Wheel / Scroll Pad / Trackpad Scroll (Kiri/Kanan & Atas/Bawah)
             const carouselContainer = document.getElementById('carouselContainer');
