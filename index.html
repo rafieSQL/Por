@@ -1249,7 +1249,7 @@
                         if (bgVideo) {
                             bgVideo.play();
                             bgVideo.classList.remove('opacity-0');
-                            bgVideo.classList.add('opacity-40');
+                            bgVideo.classList.add('opacity-50');
                         }
                         playIcon.classList.add('hidden');
                         pauseIcon.classList.remove('hidden');
@@ -1258,7 +1258,7 @@
                         audioTrack.pause();
                         if (bgVideo) {
                             bgVideo.pause();
-                            bgVideo.classList.remove('opacity-40');
+                            bgVideo.classList.remove('opacity-50');
                             bgVideo.classList.add('opacity-0');
                         }
                         playIcon.classList.remove('hidden');
@@ -1293,7 +1293,7 @@
                     if (bgVideo) {
                         bgVideo.pause();
                         bgVideo.currentTime = 0;
-                        bgVideo.classList.remove('opacity-40');
+                        bgVideo.classList.remove('opacity-50');
                         bgVideo.classList.add('opacity-0');
                     }
                     if (vinylRecord) vinylRecord.style.animationPlayState = 'paused';
