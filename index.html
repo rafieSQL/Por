@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Mukta:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
-            darkMode: 'class',
+            
             theme: {
                 extend: {
                     fontFamily: {
@@ -21,47 +21,26 @@
                         playfair: ['Playfair Display', 'serif'],
                     },
                     colors: {
-                        cream: 'var(--color-cream)',
-                        ink: 'var(--color-ink)',
-                        stone: 'var(--color-stone)',
-                        rust: 'var(--color-rust)',
-                        green: 'var(--color-green)',
+                        cream: '#FBF9F4',
+                        ink: '#1A1714',
+                        stone: '#6B6358',
+                        rust: '#B0552F',
+                        green: '#47AB19',
                     }
                 }
             }
         }
     </script>
     <style>
-        :root {
-            --color-cream: #FBF9F4;
-            --color-ink: #1A1714;
-            --color-stone: #6B6358;
-            --color-rust: #B0552F;
-            --color-green: #47AB19;
-            --glass-bg: rgba(255, 255, 255, 0.85);
-            --glass-border: rgba(255, 255, 255, 0.3);
-            --card-bg: rgba(255, 255, 255, 0.9);
-        }
-        html.dark {
-            --color-cream: #121212;
-            --color-ink: #F0F0F0;
-            --color-stone: #9CA3AF;
-            --color-rust: #E07A5F;
-            --color-green: #4ade80;
-            --glass-bg: rgba(30, 30, 30, 0.85);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --card-bg: rgba(40, 40, 40, 0.9);
-        }
         body { 
             font-family: 'Mukta', sans-serif; 
-            background-color: var(--color-cream); 
-            color: var(--color-ink); 
-            transition: background-color 0.5s ease, color 0.5s ease;
+            background-color: #FBF9F4; 
+            color: #1A1714; 
         }
         .glass-pill {
-            background: linear-gradient(to bottom, var(--glass-bg), var(--card-bg));
-            border: 1px solid var(--glass-border);
-            box-shadow: 0px 10px 30px 0px rgba(26,23,20,0.08), 0px 1px 2px 0px rgba(26,23,20,0.04);
+            background: linear-gradient(to bottom, rgba(245,245,245,0.6), rgba(245,245,245,0.95));
+            border: 1px solid rgba(255,255,255,0.85);
+            box-shadow: 0px 10px 30px 0px rgba(26,23,20,0.08), 0px 1px 2px 0px rgba(26,23,20,0.04), inset 0px 1px 0px 0px rgba(255,255,255,0.9);
             backdrop-filter: blur(14px);
         }
         .hero-rise {
@@ -91,7 +70,7 @@
     </button>
 
     <!-- Mobile Bottom Nav -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-cream/90 backdrop-blur-md border-t border-ink/10 flex lg:hidden items-center justify-between px-6 pb-safe pt-2 z-50">
+    <nav class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-ink/10 flex lg:hidden items-center justify-between px-6 pb-safe pt-2 z-50">
         <a href="#about" class="nav-link mobile-link flex flex-col items-center justify-center gap-1 p-2 w-1/4 hover:text-rust transition-colors text-stone">
             <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
             <span class="text-xs">Tentang</span>
@@ -178,7 +157,7 @@
 
     <!-- Music & Achievements Section -->
     <section id="music" class="py-24 px-5 lg:px-20 max-w-7xl mx-auto">
-        <div class="bg-cream rounded-[40px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-ink/5 p-8 lg:p-16">
+        <div class="bg-white rounded-[40px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-ink/5 p-8 lg:p-16">
             <div class="text-center mb-16">
                 <h2 class="font-inter text-[36px] lg:text-[42px] font-bold text-ink tracking-tight mb-4">Perjalanan Musikal</h2>
                 <p class="font-mukta text-lg text-stone max-w-2xl mx-auto">Saya adalah seorang musisi yang bermain di <strong>Marching Band Bhina Caraka Bea Cukai RI</strong>. Musik mengajarkan saya tentang harmoni, disiplin, dan kerja keras tim.</p>
@@ -237,7 +216,7 @@
             </div>
 
             <!-- Music Player -->
-            <div id="playerContainer" class="relative bg-cream rounded-[28px] overflow-hidden p-4 sm:p-6 lg:p-10 flex flex-row items-center gap-4 sm:gap-8 lg:gap-12 border border-ink/10 shadow-inner transition-colors duration-700">
+            <div id="playerContainer" class="relative bg-[#FBF9F4] rounded-[28px] overflow-hidden p-4 sm:p-6 lg:p-10 flex flex-row items-center gap-4 sm:gap-8 lg:gap-12 border border-ink/10 shadow-inner transition-colors duration-700">
                 
                 <!-- Background Video (Single Source of Truth for Audio & Video) -->
                 <video id="bgVideo" preload="metadata" playsinline class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 pointer-events-none z-0 mix-blend-luminosity brightness-110">
@@ -253,7 +232,7 @@
                             <!-- Album Cover (Label) -->
                             <img src="assets/images/album_cover.png" alt="The Planets Album Cover" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[35%] h-[35%] rounded-full object-cover z-20 pointer-events-none shadow-inner border border-black/10" loading="lazy" decoding="async">
                             <!-- Spindle Hole -->
-                            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1 h-1 sm:w-2 sm:h-2 bg-cream rounded-full z-30 shadow-inner border border-black/20"></div>
+                            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1 h-1 sm:w-2 sm:h-2 bg-white rounded-full z-30 shadow-inner border border-black/20"></div>
                         </div>
                     </div>
                 </div>
@@ -272,7 +251,7 @@
                         </p>
                     </div>
 
-                    <div class="w-full lg:max-w-md flex items-center gap-2 sm:gap-4 bg-cream/90 backdrop-blur-sm border border-ink/10 shadow-sm rounded-full p-1.5 sm:p-2 pr-3 sm:pr-5">
+                    <div class="w-full lg:max-w-md flex items-center gap-2 sm:gap-4 bg-white/90 backdrop-blur-sm border border-ink/10 shadow-sm rounded-full p-1.5 sm:p-2 pr-3 sm:pr-5">
                         <button id="customPlayBtn" class="size-8 sm:size-10 shrink-0 bg-rust text-white rounded-full flex items-center justify-center hover:bg-rust/90 hover:scale-105 active:scale-95 transition-all shadow-md focus:outline-none">
                             <svg id="playIcon" class="size-4 sm:size-5 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                             <svg id="pauseIcon" class="size-4 sm:size-5 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
@@ -429,7 +408,7 @@
 
     <!-- CTA Section with Dashed Grid Lines (Warm Elegant Palette) -->
     <section id="contact" class="py-20 px-5 lg:px-20 max-w-7xl mx-auto">
-        <div class="relative overflow-hidden rounded-[36px] bg-cream/90 backdrop-blur-md text-ink shadow-[0_16px_50px_rgba(26,23,20,0.06)] border  border-ink/20">
+        <div class="relative overflow-hidden rounded-[36px] bg-white/90 backdrop-blur-md text-ink shadow-[0_16px_50px_rgba(26,23,20,0.06)] border  border-ink/20">
 
             <!-- Subtle Dot Grid Background -->
             <div class="absolute inset-0 opacity-25 pointer-events-none" style="background-image: radial-gradient(rgba(26, 23, 20, 0.12) 1px, transparent 1px); background-size: 24px 24px;"></div>
@@ -488,7 +467,7 @@
     <!-- Whac-A-Mole Interactive Game Section (Arcade Easter Egg) -->
     <section id="game" class="py-16 px-5 lg:px-20 max-w-5xl mx-auto">
         <div class="relative overflow-hidden rounded-[36px] border border-ink/15 shadow-[0_16px_50px_rgba(26,23,20,0.06)]" style="background-image: url('assets/images/game/game_bg.png'); background-size: cover; background-position: center;">
-            <div class="absolute inset-0 bg-cream/85 backdrop-blur-[2px]"></div>
+            <div class="absolute inset-0 bg-[#FBF9F4]/85 backdrop-blur-[2px]"></div>
 
             <div class="relative z-10 p-6 sm:p-10 lg:p-12 text-center">
                 <h2 class="font-inter text-2xl sm:text-3xl lg:text-4xl font-bold text-ink tracking-tight mb-2">
@@ -500,7 +479,7 @@
 
                 <!-- Cara Bermain (Visual Guide) -->
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-2xl mx-auto mb-8 text-left">
-                    <div class="bg-cream/85 backdrop-blur-md border border-emerald-500/20 p-3.5 rounded-2xl flex items-center gap-3 shadow-sm">
+                    <div class="bg-white/85 backdrop-blur-md border border-emerald-500/20 p-3.5 rounded-2xl flex items-center gap-3 shadow-sm">
                         <div class="size-10 bg-emerald-500/10 flex items-center justify-center text-xl shrink-0">
                             <img src="assets/images/game/icon_rider_baik.png" alt="Rider Baik" class="w-8 h-8 object-cover" loading="lazy" decoding="async" />
                         </div>
@@ -509,7 +488,7 @@
                             <span class="font-mukta text-xs text-stone">Ketuk untuk raih <strong>+10 Poin</strong></span>
                         </div>
                     </div>
-                    <div class="bg-cream/85 backdrop-blur-md border border-rose-500/20 p-3.5 rounded-2xl flex items-center gap-3 shadow-sm">
+                    <div class="bg-white/85 backdrop-blur-md border border-rose-500/20 p-3.5 rounded-2xl flex items-center gap-3 shadow-sm">
                         <div class="size-10 bg-rose-500/10 flex items-center justify-center text-xl shrink-0">
                             <img src="assets/images/game/icon_rider_jahat.png" alt="Rider Jahat" class="w-8 h-8 object-cover" loading="lazy" decoding="async" />
                         </div>
@@ -518,7 +497,7 @@
                             <span class="font-mukta text-xs text-stone">Jangan diketuk! <strong>Game Over</strong></span>
                         </div>
                     </div>
-                    <div class="bg-cream/85 backdrop-blur-md border border-amber-500/20 p-3.5 rounded-2xl flex items-center gap-3 shadow-sm">
+                    <div class="bg-white/85 backdrop-blur-md border border-amber-500/20 p-3.5 rounded-2xl flex items-center gap-3 shadow-sm">
                         <div class="size-10 bg-amber-500/10 flex items-center justify-center text-xl shrink-0">
                             <img src="assets/images/game/icon_akselerasi.png" alt="Akselerasi" class="w-8 h-8 object-cover" loading="lazy" decoding="async" />
                         </div>
@@ -531,12 +510,12 @@
 
                 <!-- Game Status & Scoreboard -->
                 <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-6 mb-8">
-                    <div class="bg-cream/90 backdrop-blur-md px-5 py-2.5 rounded-2xl border border-black/10 shadow-sm flex items-center gap-3">
+                    <div class="bg-white/90 backdrop-blur-md px-5 py-2.5 rounded-2xl border border-black/10 shadow-sm flex items-center gap-3">
                         <span class="font-mukta text-xs text-stone uppercase tracking-wider font-bold">Skor:</span>
                         <span id="gameScore" class="font-inter text-2xl font-extrabold text-rust">0</span>
                     </div>
 
-                    <div class="bg-cream/90 backdrop-blur-md px-5 py-2.5 rounded-2xl border border-black/10 shadow-sm flex items-center gap-3">
+                    <div class="bg-white/90 backdrop-blur-md px-5 py-2.5 rounded-2xl border border-black/10 shadow-sm flex items-center gap-3">
                         <span class="font-mukta text-xs text-stone uppercase tracking-wider font-bold">Skor Tertinggi:</span>
                         <span id="gameHighScore" class="font-inter text-2xl font-extrabold text-ink">0</span>
                     </div>
@@ -624,7 +603,7 @@
 
             cardStackItems.forEach((card) => {
                 const cardEl = document.createElement('div');
-                cardEl.className = 'absolute inset-0 rounded-[32px] overflow-hidden shadow-2xl border border-white/80 bg-cream transition-transform duration-500 ease-out flex flex-col justify-between';
+                cardEl.className = 'absolute inset-0 rounded-[32px] overflow-hidden shadow-2xl border border-white/80 bg-white transition-transform duration-500 ease-out flex flex-col justify-between';
                 cardEl.style.transformOrigin = 'top center';
                 cardEl.style.willChange = 'transform, opacity';
                 cardEl.innerHTML = `
