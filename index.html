@@ -209,10 +209,15 @@
             </div>
 
             <!-- Music Player -->
-            <div class="bg-[#FBF9F4] rounded-[28px] p-6 lg:p-10 flex flex-col md:flex-row md:items-center gap-8 lg:gap-12 border border-ink/10 shadow-inner">
+            <div id="playerContainer" class="relative bg-[#FBF9F4] rounded-[28px] overflow-hidden p-6 lg:p-10 flex flex-col md:flex-row md:items-center gap-8 lg:gap-12 border border-ink/10 shadow-inner transition-colors duration-700">
                 
+                <!-- Background Video -->
+                <video id="bgVideo" preload="metadata" playsinline muted class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 pointer-events-none z-0 mix-blend-luminosity brightness-110">
+                    <source src="assets/audio/jupiter_video.mp4" type="video/mp4">
+                </video>
+
                 <!-- Left: Vinyl Graphic -->
-                <div class="flex justify-center shrink-0 w-full md:w-auto">
+                <div class="flex justify-center shrink-0 w-full md:w-auto relative z-10">
                     <div class="relative w-48 h-48 lg:w-56 lg:h-56 drop-shadow-xl transition-transform duration-500 hover:scale-105">
                         <div id="vinylRecord" class="w-full h-full relative origin-center animate-[spin_4s_linear_infinite]" style="animation-play-state: paused;">
                             <!-- Vinyl disc -->
@@ -226,7 +231,7 @@
                 </div>
 
                 <!-- Right: Text & Controls -->
-                <div class="text-left flex-1 flex flex-col w-full">
+                <div class="text-left flex-1 flex flex-col w-full relative z-10">
                     <div class="mb-6">
                         <h3 class="font-inter text-xl lg:text-2xl font-bold text-ink leading-tight">
                             Gustav Holst, The Planets: Jupiter
@@ -241,11 +246,11 @@
 
                     <!-- Audio Player embedded with the text -->
                     <audio id="audioTrack" preload="metadata">
-                        <source src="assets/audio/jupiter.m4a" type="audio/mp4">
-                        <source src="assets/audio/jupiter.m4a" type="audio/x-m4a">
+                        <source src="assets/audio/jupiter_audio.m4a" type="audio/mp4">
+                        <source src="assets/audio/jupiter_audio.m4a" type="audio/x-m4a">
                         Browser Anda tidak mendukung pemutar audio.
                     </audio>
-                    <div class="w-full lg:max-w-md flex items-center gap-4 bg-white border border-ink/10 shadow-sm rounded-full p-2 pr-5">
+                    <div class="w-full lg:max-w-md flex items-center gap-4 bg-white/90 backdrop-blur-sm border border-ink/10 shadow-sm rounded-full p-2 pr-5">
                         <button id="customPlayBtn" class="size-10 shrink-0 bg-rust text-white rounded-full flex items-center justify-center hover:bg-rust/90 hover:scale-105 active:scale-95 transition-all shadow-md focus:outline-none">
                             <svg id="playIcon" class="size-5 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                             <svg id="pauseIcon" class="size-5 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
@@ -1216,11 +1221,12 @@
             const playBtn = document.getElementById('customPlayBtn');
             const playIcon = document.getElementById('playIcon');
             const pauseIcon = document.getElementById('pauseIcon');
-            const progressFill = document.getElementById('audioProgressFill');
             const progressBar = document.getElementById('audioProgressBar');
+            const progressFill = document.getElementById('audioProgressFill');
             const currentTimeEl = document.getElementById('audioCurrentTime');
             const durationEl = document.getElementById('audioDuration');
             const vinylRecord = document.getElementById('vinylRecord');
+            const bgVideo = document.getElementById('bgVideo');
 
             function formatTime(seconds) {
                 if (isNaN(seconds)) return "0:00";
@@ -1240,11 +1246,21 @@
                 playBtn.addEventListener('click', () => {
                     if (audioTrack.paused) {
                         audioTrack.play();
+                        if (bgVideo) {
+                            bgVideo.play();
+                            bgVideo.classList.remove('opacity-0');
+                            bgVideo.classList.add('opacity-40');
+                        }
                         playIcon.classList.add('hidden');
                         pauseIcon.classList.remove('hidden');
                         if (vinylRecord) vinylRecord.style.animationPlayState = 'running';
                     } else {
                         audioTrack.pause();
+                        if (bgVideo) {
+                            bgVideo.pause();
+                            bgVideo.classList.remove('opacity-40');
+                            bgVideo.classList.add('opacity-0');
+                        }
                         playIcon.classList.remove('hidden');
                         pauseIcon.classList.add('hidden');
                         if (vinylRecord) vinylRecord.style.animationPlayState = 'paused';
@@ -1265,6 +1281,7 @@
                     const percent = clickX / rect.width;
                     if (audioTrack.duration) {
                         audioTrack.currentTime = percent * audioTrack.duration;
+                        if (bgVideo) bgVideo.currentTime = audioTrack.currentTime;
                     }
                 });
 
@@ -1273,6 +1290,12 @@
                     pauseIcon.classList.add('hidden');
                     progressFill.style.width = '0%';
                     audioTrack.currentTime = 0;
+                    if (bgVideo) {
+                        bgVideo.pause();
+                        bgVideo.currentTime = 0;
+                        bgVideo.classList.remove('opacity-40');
+                        bgVideo.classList.add('opacity-0');
+                    }
                     if (vinylRecord) vinylRecord.style.animationPlayState = 'paused';
                 });
             }
