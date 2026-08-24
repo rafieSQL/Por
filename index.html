@@ -213,12 +213,29 @@
                         </p>
                     </div>
                 </div>
-                <div class="w-full md:w-[360px] lg:w-[420px] flex flex-col gap-2">
-                    <audio id="audioTrack" controls class="w-full h-11 rounded-full outline-none focus:ring-2 focus:ring-rust/30">
+                <div class="w-full md:w-[360px] lg:w-[420px] flex flex-col">
+                    <audio id="audioTrack" preload="metadata">
                         <source src="assets/audio/jupiter.m4a" type="audio/mp4">
                         <source src="assets/audio/jupiter.m4a" type="audio/x-m4a">
                         Browser Anda tidak mendukung pemutar audio.
                     </audio>
+                    <!-- Custom Player UI -->
+                    <div class="flex items-center gap-4 bg-white border border-ink/10 shadow-sm rounded-full p-2 pr-5">
+                        <button id="customPlayBtn" class="size-10 shrink-0 bg-rust text-white rounded-full flex items-center justify-center hover:bg-rust/90 hover:scale-105 active:scale-95 transition-all shadow-md focus:outline-none">
+                            <svg id="playIcon" class="size-5 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            <svg id="pauseIcon" class="size-5 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                        </button>
+                        
+                        <div class="flex items-center gap-3 flex-1">
+                            <span id="audioCurrentTime" class="font-mukta text-xs font-semibold text-stone w-8 text-right shrink-0">0:00</span>
+                            
+                            <div id="audioProgressBar" class="h-1.5 flex-1 bg-stone/20 rounded-full cursor-pointer relative flex items-center group overflow-hidden">
+                                <div id="audioProgressFill" class="absolute top-0 left-0 h-full bg-rust w-0 rounded-full group-hover:bg-rust/80 transition-colors"></div>
+                            </div>
+                            
+                            <span id="audioDuration" class="font-mukta text-xs font-semibold text-stone w-8 shrink-0">0:00</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1166,6 +1183,67 @@
                     }
                     restartCardTimer();
                 }, {passive: true});
+            }
+            // Custom Audio Player Logic
+            const audioTrack = document.getElementById('audioTrack');
+            const playBtn = document.getElementById('customPlayBtn');
+            const playIcon = document.getElementById('playIcon');
+            const pauseIcon = document.getElementById('pauseIcon');
+            const progressFill = document.getElementById('audioProgressFill');
+            const progressBar = document.getElementById('audioProgressBar');
+            const currentTimeEl = document.getElementById('audioCurrentTime');
+            const durationEl = document.getElementById('audioDuration');
+
+            function formatTime(seconds) {
+                if (isNaN(seconds)) return "0:00";
+                const m = Math.floor(seconds / 60);
+                const s = Math.floor(seconds % 60);
+                return m + ":" + (s < 10 ? "0" : "") + s;
+            }
+
+            if (audioTrack && playBtn) {
+                if (audioTrack.readyState >= 1) {
+                    durationEl.innerText = formatTime(audioTrack.duration);
+                }
+                audioTrack.addEventListener('loadedmetadata', () => {
+                    durationEl.innerText = formatTime(audioTrack.duration);
+                });
+
+                playBtn.addEventListener('click', () => {
+                    if (audioTrack.paused) {
+                        audioTrack.play();
+                        playIcon.classList.add('hidden');
+                        pauseIcon.classList.remove('hidden');
+                    } else {
+                        audioTrack.pause();
+                        playIcon.classList.remove('hidden');
+                        pauseIcon.classList.add('hidden');
+                    }
+                });
+
+                audioTrack.addEventListener('timeupdate', () => {
+                    currentTimeEl.innerText = formatTime(audioTrack.currentTime);
+                    if (audioTrack.duration) {
+                        const percent = (audioTrack.currentTime / audioTrack.duration) * 100;
+                        progressFill.style.width = percent + '%';
+                    }
+                });
+
+                progressBar.addEventListener('click', (e) => {
+                    const rect = progressBar.getBoundingClientRect();
+                    const clickX = e.clientX - rect.left;
+                    const percent = clickX / rect.width;
+                    if (audioTrack.duration) {
+                        audioTrack.currentTime = percent * audioTrack.duration;
+                    }
+                });
+
+                audioTrack.addEventListener('ended', () => {
+                    playIcon.classList.remove('hidden');
+                    pauseIcon.classList.add('hidden');
+                    progressFill.style.width = '0%';
+                    audioTrack.currentTime = 0;
+                });
             }
         });
     </script>
