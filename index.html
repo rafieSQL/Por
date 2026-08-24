@@ -879,6 +879,8 @@
 
         // ASMR Keyboard Sound Generator (Zero bloat!)
         let typeAudioCtx = null;
+        let cachedNoiseBuffer = null;
+
         function playTypingSound() {
             if (!typeAudioCtx) {
                 typeAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -905,16 +907,18 @@
             osc.start();
             osc.stop(typeAudioCtx.currentTime + 0.05);
 
-            // "Click/Clack" noise
-            const bufferSize = typeAudioCtx.sampleRate * 0.04;
-            const buffer = typeAudioCtx.createBuffer(1, bufferSize, typeAudioCtx.sampleRate);
-            const data = buffer.getChannelData(0);
-            for (let i = 0; i < bufferSize; i++) {
-                data[i] = Math.random() * 2 - 1;
+            // "Click/Clack" noise - Cached for extreme performance
+            if (!cachedNoiseBuffer) {
+                const bufferSize = typeAudioCtx.sampleRate * 0.04;
+                cachedNoiseBuffer = typeAudioCtx.createBuffer(1, bufferSize, typeAudioCtx.sampleRate);
+                const data = cachedNoiseBuffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = Math.random() * 2 - 1;
+                }
             }
             
             const noise = typeAudioCtx.createBufferSource();
-            noise.buffer = buffer;
+            noise.buffer = cachedNoiseBuffer;
             const noiseFilter = typeAudioCtx.createBiquadFilter();
             noiseFilter.type = 'highpass';
             noiseFilter.frequency.value = 2500 + Math.random() * 1000;
@@ -946,24 +950,29 @@
         let charIndex = 0;
         let mistakes = 0;
         let isTyping = false;
+        let cachedCharacters = [];
 
         function loadParagraph() {
             const ranIndex = Math.floor(Math.random() * typingParagraphs.length);
-            typingText.innerHTML = "";
-            typingParagraphs[ranIndex].split("").forEach(char => {
-                let span = `<span>${char}</span>`;
-                typingText.innerHTML += span;
-            });
-            typingText.querySelectorAll("span")[0].classList.add("active");
+            
+            // Build HTML string once to prevent reflows inside loop (Massive Astro-like performance win)
+            const htmlString = typingParagraphs[ranIndex]
+                .split("")
+                .map(char => `<span>${char}</span>`)
+                .join("");
+            
+            typingText.innerHTML = htmlString;
+            cachedCharacters = typingText.querySelectorAll("span");
+            cachedCharacters[0].classList.add("active");
+            
             document.addEventListener("keydown", () => inpField.focus());
             typingContainer.addEventListener("click", () => inpField.focus());
         }
 
         function initTyping() {
-            let characters = typingText.querySelectorAll("span");
             let typedChar = inpField.value.split("")[charIndex];
             
-            if (charIndex < characters.length - 1 && timeLeft > 0) {
+            if (charIndex < cachedCharacters.length - 1 && timeLeft > 0) {
                 // Play ASMR sound
                 playTypingSound();
 
@@ -975,24 +984,27 @@
                 if (typedChar == null) {
                     if (charIndex > 0) {
                         charIndex--;
-                        if (characters[charIndex].classList.contains("incorrect")) {
+                        if (cachedCharacters[charIndex].classList.contains("incorrect")) {
                             mistakes--;
                         }
-                        characters[charIndex].className = ""; // clear classes
+                        cachedCharacters[charIndex].className = ""; // clear classes
                     }
                 } else {
-                    if (characters[charIndex].innerText === typedChar) {
-                        characters[charIndex].classList.add("correct");
+                    if (cachedCharacters[charIndex].innerText === typedChar) {
+                        cachedCharacters[charIndex].classList.add("correct");
                     } else {
                         mistakes++;
-                        characters[charIndex].classList.add("incorrect");
+                        cachedCharacters[charIndex].classList.add("incorrect");
                     }
                     charIndex++;
                 }
                 
-                characters.forEach(span => span.classList.remove("active"));
-                if (charIndex < characters.length) {
-                    let activeSpan = characters[charIndex];
+                // Remove active class safely
+                const currentActive = typingText.querySelector("span.active");
+                if (currentActive) currentActive.classList.remove("active");
+                
+                if (charIndex < cachedCharacters.length) {
+                    let activeSpan = cachedCharacters[charIndex];
                     activeSpan.classList.add("active");
                     
                     // Auto-scroll logic: keep the active line in view
