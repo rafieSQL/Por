@@ -83,16 +83,14 @@
     </nav>
 
     <!-- Desktop Nav -->
-    <nav class="fixed left-1/2 top-6 z-50 w-max -translate-x-1/2 items-center gap-10 rounded-full glass-pill p-2 hidden lg:flex">
+    <nav class="fixed left-1/2 top-6 z-50 w-max -translate-x-1/2 items-center rounded-full glass-pill p-2 hidden lg:flex">
         <div class="flex items-center gap-1 font-mukta text-sm font-semibold text-ink">
             <a href="#about" class="nav-link desktop-link rounded-xl px-4 py-2 hover:bg-[#F2F0E9] transition-colors">Tentang</a>
             <a href="#music" class="nav-link desktop-link rounded-xl px-4 py-2 hover:bg-[#F2F0E9] transition-colors">Musik</a>
             <a href="#gallery" class="nav-link desktop-link rounded-xl px-4 py-2 hover:bg-[#F2F0E9] transition-colors">Galeri</a>
             <a href="#organization" class="nav-link desktop-link rounded-xl px-4 py-2 hover:bg-[#F2F0E9] transition-colors">Organisasi</a>
+            <a href="#contact" class="nav-link desktop-link rounded-xl px-4 py-2 hover:bg-[#F2F0E9] transition-colors">Kontak Saya</a>
         </div>
-        <a href="#contact" class="nav-link desktop-link flex h-10 cursor-pointer items-center justify-center gap-2 rounded-full px-5 border border-ink/15 hover:bg-[#F2F0E9] transition-colors">
-            <span class="font-mukta text-sm font-semibold text-ink transition-colors">Kontak Saya</span>
-        </a>
     </nav>
 
     <!-- Hero Section -->
@@ -1311,14 +1309,6 @@
                                     link.classList.add('text-rust');
                                     link.classList.remove('text-stone');
                                 }
-                                // Special case for contact button span
-                                if (link.getAttribute("href") === '#contact') {
-                                    const span = link.querySelector('span');
-                                    if(span) {
-                                        span.classList.add('text-rust');
-                                        span.classList.remove('text-ink');
-                                    }
-                                }
                             } else {
                                 // Desktop inactive style
                                 if (link.classList.contains('desktop-link')) {
@@ -1328,13 +1318,6 @@
                                 if (link.classList.contains('mobile-link')) {
                                     link.classList.remove('text-rust');
                                     link.classList.add('text-stone');
-                                }
-                                if (link.getAttribute("href") === '#contact') {
-                                    const span = link.querySelector('span');
-                                    if(span) {
-                                        span.classList.remove('text-rust');
-                                        span.classList.add('text-ink');
-                                    }
                                 }
                             }
                         });
