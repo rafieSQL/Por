@@ -944,6 +944,25 @@
         const cpmTag = document.querySelector("#cpm-score");
         const typingContainer = document.querySelector("#typing-text-container");
 
+        let isGameInView = false;
+        const gameSection = document.getElementById("game");
+        if (gameSection) {
+            const gameObserver = new IntersectionObserver((entries) => {
+                isGameInView = entries[0].isIntersecting;
+            }, { threshold: 0.4 });
+            gameObserver.observe(gameSection);
+        }
+
+        // Global keydown only focuses if game is in viewport, preventing accidental scrolling hijacking globally
+        document.addEventListener("keydown", (e) => {
+            if (isGameInView && document.activeElement !== inpField && !e.ctrlKey && !e.metaKey && !e.altKey) {
+                inpField.focus();
+            }
+        });
+        
+        // Manual click to focus
+        typingContainer.addEventListener("click", () => inpField.focus());
+
         let timer;
         let maxTime = 60;
         let timeLeft = maxTime;
@@ -964,9 +983,6 @@
             typingText.innerHTML = htmlString;
             cachedCharacters = typingText.querySelectorAll("span");
             cachedCharacters[0].classList.add("active");
-            
-            document.addEventListener("keydown", () => inpField.focus());
-            typingContainer.addEventListener("click", () => inpField.focus());
         }
 
         function initTyping() {
