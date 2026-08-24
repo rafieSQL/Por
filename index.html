@@ -59,6 +59,16 @@
         .hero-rise-3 { transition-delay: 0.5s; }
         
         /* Typing Game Styles */
+        #typing-text-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        #typing-text-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        #typing-text-container::-webkit-scrollbar-thumb {
+            background: rgba(26, 23, 20, 0.1);
+            border-radius: 10px;
+        }
         #typing-text span {
             position: relative;
         }
@@ -100,11 +110,7 @@
 
 
 
-    <!-- Theme Toggle -->
-    <button id="themeToggle" class="fixed left-4 top-4 lg:left-6 lg:top-6 z-[60] rounded-full glass-pill p-3 text-ink hover:text-rust transition-colors shadow-sm flex items-center justify-center" title="Toggle Dark Mode">
-        <svg id="themeIconLight" class="size-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
-        <svg id="themeIconDark" class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
-    </button>
+
 
     <!-- Mobile Bottom Nav -->
     <nav class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-ink/10 flex lg:hidden items-center justify-between px-6 pb-safe pt-2 z-50">
@@ -506,7 +512,7 @@
         <div class="relative overflow-hidden rounded-[36px] bg-[#FBF9F4] border border-ink/15 shadow-[0_16px_50px_rgba(26,23,20,0.06)] p-6 sm:p-10 lg:p-12 text-center">
             
             <h2 class="font-inter text-2xl sm:text-3xl lg:text-4xl font-bold text-ink tracking-tight mb-2">
-                Tes Kecepatan Mengetik ⌨️
+                Tes Kecepatan Mengetik
             </h2>
             <p class="font-mukta text-stone text-sm sm:text-base max-w-xl mx-auto mb-8">
                 Berapa banyak kata yang bisa kamu ketik dalam satu menit? Ketik teks di bawah secepat dan setepat mungkin!
@@ -518,7 +524,7 @@
                 <input type="text" id="typing-input" class="opacity-0 absolute -z-10 w-0 h-0">
                 
                 <!-- Typing Text Box -->
-                <div class="max-h-[160px] sm:max-h-[200px] overflow-hidden cursor-pointer rounded-xl bg-black/5 p-5 border border-ink/5" id="typing-text-container">
+                <div class="max-h-[160px] sm:max-h-[200px] overflow-y-auto cursor-pointer rounded-xl bg-black/5 p-5 border border-ink/5 relative" id="typing-text-container">
                     <p id="typing-text" class="font-mukta text-lg sm:text-xl text-stone/80 leading-relaxed tracking-wide select-none"></p>
                 </div>
                 
@@ -546,7 +552,7 @@
                     
                     <!-- Action -->
                     <button id="try-again-btn" class="w-full sm:w-auto bg-rust text-white font-semibold font-inter text-sm px-8 py-3.5 rounded-full hover:bg-[#9A4826] active:scale-95 transition-all shadow-md">
-                        Coba Lagi 🔄
+                        Coba Lagi
                     </button>
                 </div>
             </div>
@@ -865,11 +871,65 @@
 
         // Typing Speed Test Game Logic
         const typingParagraphs = [
-            "Musik dan teknologi adalah dua dunia yang saling melengkapi. Ketika saya bermain alat musik, saya merasakan ritme dan pola yang terstruktur, sama seperti ketika saya menulis kode program. Keduanya membutuhkan ketelitian, dedikasi, dan kreativitas untuk menghasilkan karya yang fungsional.",
-            "Sebagai seorang siswa, saya selalu berusaha menyeimbangkan antara kehidupan akademis, organisasi, dan hobi. Waktu adalah aset yang paling berharga, dan manajemen waktu yang baik memungkinkan saya untuk tetap berprestasi di kelas sambil terus mengembangkan keterampilan di bidang kecerdasan buatan.",
-            "Marching band mengajarkan saya tentang arti kerja sama tim, kedisiplinan, dan kepemimpinan. Dalam sebuah penampilan, setiap anggota memiliki peran penting. Jika satu orang melakukan kesalahan, seluruh harmoni dapat terganggu. Hal ini mengajarkan saya untuk selalu memberikan yang terbaik.",
-            "Dunia teknologi berkembang dengan sangat pesat setiap harinya. Mempelajari bahasa pemrograman baru, memahami algoritma kompleks, dan merancang antarmuka pengguna yang ramah adalah tantangan yang menyenangkan. Saya selalu menantang diri sendiri untuk membuat proyek yang berdampak positif."
+            "Perjalanan saya di dunia teknologi dimulai dengan sebuah rasa penasaran yang sederhana namun mendalam terhadap bagaimana komputer bekerja. Dari baris kode pertama yang saya tulis hingga merancang arsitektur perangkat lunak yang lebih kompleks, setiap proses selalu memberikan kepuasan tersendiri. Keterampilan pemrograman bukan sekadar tentang menghafal sintaksis, melainkan tentang cara kita memecahkan masalah secara efisien, kreatif, dan logis. Seperti dalam sebuah simfoni, di mana setiap instrumen memiliki perannya masing-masing untuk menciptakan harmoni yang indah, barisan kode yang ditulis dengan teliti dan terstruktur juga akan menghasilkan sebuah aplikasi yang tangguh dan dapat memberikan solusi nyata bagi banyak orang. Dunia ini terus berkembang, dan beradaptasi adalah kunci utama.",
+            "Bagi saya, pengalaman tampil bersama tim marching band dalam berbagai ajang kompetisi bergengsi adalah salah satu momen paling berharga dalam hidup. Proses latihan yang sangat disiplin, manajemen waktu yang ketat, dan dedikasi yang tinggi untuk mencapai kesempurnaan telah membentuk karakter kepemimpinan saya. Ketika ratusan anggota bergerak dan memainkan alat musik secara serentak di lapangan, tidak ada ruang untuk ego individu. Setiap langkah, nada, dan gerakan harus selaras sempurna. Sama halnya dalam membangun proyek teknologi atau bisnis, kolaborasi tim yang solid, komunikasi yang transparan, serta pemahaman mendalam akan peran masing-masing adalah kunci utama untuk mencapai kesuksesan yang berkesinambungan dan mengatasi berbagai rintangan.",
+            "Kecerdasan buatan dan machine learning saat ini telah merevolusi berbagai aspek kehidupan manusia, mulai dari cara kita berkomunikasi, bekerja, hingga menyelesaikan permasalahan sehari-hari yang rumit. Saya sangat antusias untuk mendalami bidang ini lebih jauh karena saya percaya bahwa teknologi mutakhir harus digunakan sebagai alat bantu untuk meningkatkan potensi dan produktivitas umat manusia secara keseluruhan. Melalui eksplorasi data yang mendalam dan pemanfaatan algoritma cerdas, kita dapat menemukan pola-pola tersembunyi yang sebelumnya tidak terlihat sama sekali. Dengan fondasi logika matematika yang kuat, saya berkomitmen penuh untuk terus berinovasi, berkreasi, dan berkontribusi dalam menciptakan sistem-sistem yang lebih adaptif, cerdas, dan tentunya berdampak positif bagi masyarakat luas.",
+            "Manajemen waktu sering kali menjadi tantangan terbesar bagi seorang siswa yang sangat aktif dalam berbagai organisasi kepemudaan dan proyek-proyek kreatif di luar jam sekolah reguler. Namun, justru di situlah letak proses pembelajaran yang sesungguhnya. Saya mulai belajar untuk menyusun skala prioritas dengan bijak, menyeimbangkan secara adil antara tanggung jawab akademis yang menuntut, eksplorasi teknologi terapan, serta hasrat dan hobi di bidang seni musik. Kehidupan ini rasanya terlalu singkat dan berharga jika hanya dihabiskan dengan berdiam diri di dalam zona nyaman semata. Oleh karena itu, saya selalu proaktif menantang diri sendiri untuk mempelajari hal-hal baru dan menerapkannya dalam proyek nyata."
         ];
+
+        // ASMR Keyboard Sound Generator (Zero bloat!)
+        let typeAudioCtx = null;
+        function playTypingSound() {
+            if (!typeAudioCtx) {
+                typeAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (typeAudioCtx.state === 'suspended') typeAudioCtx.resume();
+            
+            // "Thud" oscillator
+            const osc = typeAudioCtx.createOscillator();
+            const oscGain = typeAudioCtx.createGain();
+            osc.type = 'sine';
+            
+            // Randomize pitch slightly for organic ASMR feel
+            const baseFreq = 80 + Math.random() * 20; 
+            osc.frequency.setValueAtTime(baseFreq, typeAudioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(10, typeAudioCtx.currentTime + 0.05);
+            
+            oscGain.gain.setValueAtTime(0, typeAudioCtx.currentTime);
+            oscGain.gain.linearRampToValueAtTime(0.3, typeAudioCtx.currentTime + 0.005);
+            oscGain.gain.exponentialRampToValueAtTime(0.01, typeAudioCtx.currentTime + 0.04);
+            
+            osc.connect(oscGain);
+            oscGain.connect(typeAudioCtx.destination);
+            
+            osc.start();
+            osc.stop(typeAudioCtx.currentTime + 0.05);
+
+            // "Click/Clack" noise
+            const bufferSize = typeAudioCtx.sampleRate * 0.04;
+            const buffer = typeAudioCtx.createBuffer(1, bufferSize, typeAudioCtx.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = Math.random() * 2 - 1;
+            }
+            
+            const noise = typeAudioCtx.createBufferSource();
+            noise.buffer = buffer;
+            const noiseFilter = typeAudioCtx.createBiquadFilter();
+            noiseFilter.type = 'highpass';
+            noiseFilter.frequency.value = 2500 + Math.random() * 1000;
+            
+            const noiseGain = typeAudioCtx.createGain();
+            noiseGain.gain.setValueAtTime(0, typeAudioCtx.currentTime);
+            noiseGain.gain.linearRampToValueAtTime(0.08, typeAudioCtx.currentTime + 0.005);
+            noiseGain.gain.exponentialRampToValueAtTime(0.01, typeAudioCtx.currentTime + 0.03);
+            
+            noise.connect(noiseFilter);
+            noiseFilter.connect(noiseGain);
+            noiseGain.connect(typeAudioCtx.destination);
+            
+            noise.start();
+        }
 
         const typingText = document.querySelector("#typing-text");
         const inpField = document.querySelector("#typing-input");
@@ -904,6 +964,9 @@
             let typedChar = inpField.value.split("")[charIndex];
             
             if (charIndex < characters.length - 1 && timeLeft > 0) {
+                // Play ASMR sound
+                playTypingSound();
+
                 if (!isTyping) {
                     timer = setInterval(initTimer, 1000);
                     isTyping = true;
@@ -1196,33 +1259,7 @@
             const observer = new IntersectionObserver(observerCallback, observerOptions);
             sections.forEach((sec) => observer.observe(sec));
         });
-        /* THEME TOGGLE LOGIC */
-        const themeToggleBtn = document.getElementById('themeToggle');
-        const themeIconLight = document.getElementById('themeIconLight');
-        const themeIconDark = document.getElementById('themeIconDark');
-        const htmlElement = document.documentElement;
 
-        // Check local storage or system preference on load
-        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            htmlElement.classList.add('dark');
-            themeIconDark.classList.add('hidden');
-            themeIconLight.classList.remove('hidden');
-        } else {
-            htmlElement.classList.remove('dark');
-        }
-
-        themeToggleBtn.addEventListener('click', () => {
-            htmlElement.classList.toggle('dark');
-            if (htmlElement.classList.contains('dark')) {
-                localStorage.setItem('theme', 'dark');
-                themeIconDark.classList.add('hidden');
-                themeIconLight.classList.remove('hidden');
-            } else {
-                localStorage.setItem('theme', 'light');
-                themeIconLight.classList.add('hidden');
-                themeIconDark.classList.remove('hidden');
-            }
-        });
     </script>
 </body>
 </html>
