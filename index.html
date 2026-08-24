@@ -1067,21 +1067,23 @@
             if (carouselContainer) {
                 let wheelThrottle = false;
                 carouselContainer.addEventListener('wheel', (e) => {
-                    const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-                    if (Math.abs(delta) > 12) {
+                    // Hanya izinkan scroll horizontal (mousepad kiri/kanan) untuk ganti foto
+                    if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 15) {
                         e.preventDefault();
                         if (!wheelThrottle) {
                             wheelThrottle = true;
-                            if (delta > 0) {
+                            if (e.deltaX > 0) {
                                 carouselNext();
                             } else {
                                 carouselPrev();
                             }
+                            // Throttle 600ms agar 1 kali swipe/gulir tidak kelewat banyak foto
                             setTimeout(() => {
                                 wheelThrottle = false;
-                            }, 320);
+                            }, 600);
                         }
                     }
+                    // Jika scroll atas/bawah, biarkan halaman bergulir normal (tanpa preventDefault)
                 }, { passive: false });
 
                 // Carousel: Desktop Cursor Drag (Geser menggunakan mouse drag)
