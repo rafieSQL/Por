@@ -1245,7 +1245,14 @@
 
                 playBtn.addEventListener('click', () => {
                     if (audioTrack.paused) {
-                        // ACID: Atomicity - Ensure both start playing together without delay
+                        // ACID: Atomicity - Ensure both start playing together
+                        if (bgVideo) {
+                            // Sync time once before starting to guarantee consistency without runtime friction
+                            if (Math.abs(bgVideo.currentTime - audioTrack.currentTime) > 0.1) {
+                                bgVideo.currentTime = audioTrack.currentTime;
+                            }
+                        }
+                        
                         const playPromises = [audioTrack.play()];
                         if (bgVideo) playPromises.push(bgVideo.play());
 
@@ -1259,7 +1266,6 @@
                             if (vinylRecord) vinylRecord.style.animationPlayState = 'running';
                         }).catch(error => {
                             console.error("ACID Transaction Failed: Playback rejected", error);
-                            // Rollback
                             audioTrack.pause();
                             if (bgVideo) bgVideo.pause();
                         });
@@ -1277,16 +1283,7 @@
                 });
 
                 audioTrack.addEventListener('timeupdate', () => {
-                    // ACID: Consistency Enforcement (Zero-Tolerance)
-                    // Ensure the background video never drifts away from the audio track
-                    if (bgVideo && !audioTrack.paused) {
-                        const drift = Math.abs(bgVideo.currentTime - audioTrack.currentTime);
-                        // Tightened to 0.1s for strict, zero-delay synchronization
-                        if (drift > 0.1) {
-                            bgVideo.currentTime = audioTrack.currentTime;
-                        }
-                    }
-
+                    // Removed continuous drift checking to eliminate stuttering and lag
                     currentTimeEl.innerText = formatTime(audioTrack.currentTime);
                     if (audioTrack.duration) {
                         const percent = (audioTrack.currentTime / audioTrack.duration) * 100;
