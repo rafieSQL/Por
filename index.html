@@ -507,15 +507,15 @@
         </div>
     </section>
 
-    <!-- Permainan Tes Kecepatan Mengetik (WPM TEST) -->
+    <!-- Typing Speed Test Game (WPM TEST) -->
     <section id="game" class="py-16 px-5 lg:px-20 max-w-5xl mx-auto">
         <div class="relative overflow-hidden rounded-[36px] bg-[#FBF9F4] border border-ink/15 shadow-[0_16px_50px_rgba(26,23,20,0.06)] p-6 sm:p-10 lg:p-12 text-center">
             
             <h2 class="font-inter text-2xl sm:text-3xl lg:text-4xl font-bold text-ink tracking-tight mb-2">
-                Tes Kecepatan Mengetik
+                Typing Speed Test
             </h2>
             <p class="font-mukta text-stone text-sm sm:text-base max-w-xl mx-auto mb-8">
-                Berapa banyak kata yang bisa kamu ketik dalam satu menit? Ketik teks di bawah secepat dan setepat mungkin!
+                How many words can you type in one minute? Type the text below as fast and accurately as possible!
             </p>
 
             <!-- Typing Interface -->
@@ -533,11 +533,11 @@
                     <!-- Stats -->
                     <ul class="flex flex-wrap items-center gap-6 sm:gap-10 w-full sm:w-auto">
                         <li class="flex flex-col">
-                            <span class="font-mukta text-[11px] sm:text-xs text-stone uppercase tracking-wider font-bold mb-1">Sisa Waktu</span>
+                            <span class="font-mukta text-[11px] sm:text-xs text-stone uppercase tracking-wider font-bold mb-1">Time Left</span>
                             <span class="font-inter text-2xl font-extrabold text-ink"><b id="time-left">60</b>s</span>
                         </li>
                         <li class="flex flex-col relative pl-6 sm:pl-10 before:content-[''] before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:h-8 before:w-px before:bg-ink/10">
-                            <span class="font-mukta text-[11px] sm:text-xs text-stone uppercase tracking-wider font-bold mb-1">Kesalahan</span>
+                            <span class="font-mukta text-[11px] sm:text-xs text-stone uppercase tracking-wider font-bold mb-1">Mistakes</span>
                             <span id="mistake-count" class="font-inter text-2xl font-extrabold text-rust">0</span>
                         </li>
                         <li class="flex flex-col relative pl-6 sm:pl-10 before:content-[''] before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:h-8 before:w-px before:bg-ink/10">
@@ -552,7 +552,7 @@
                     
                     <!-- Action -->
                     <button id="try-again-btn" class="w-full sm:w-auto bg-rust text-white font-semibold font-inter text-sm px-8 py-3.5 rounded-full hover:bg-[#9A4826] active:scale-95 transition-all shadow-md">
-                        Coba Lagi
+                        Try Again
                     </button>
                 </div>
             </div>
@@ -871,10 +871,10 @@
 
         // Typing Speed Test Game Logic
         const typingParagraphs = [
-            "Perjalanan saya di dunia teknologi dimulai dengan sebuah rasa penasaran yang sederhana namun mendalam terhadap bagaimana komputer bekerja. Dari baris kode pertama yang saya tulis hingga merancang arsitektur perangkat lunak yang lebih kompleks, setiap proses selalu memberikan kepuasan tersendiri. Keterampilan pemrograman bukan sekadar tentang menghafal sintaksis, melainkan tentang cara kita memecahkan masalah secara efisien, kreatif, dan logis. Seperti dalam sebuah simfoni, di mana setiap instrumen memiliki perannya masing-masing untuk menciptakan harmoni yang indah, barisan kode yang ditulis dengan teliti dan terstruktur juga akan menghasilkan sebuah aplikasi yang tangguh dan dapat memberikan solusi nyata bagi banyak orang. Dunia ini terus berkembang, dan beradaptasi adalah kunci utama.",
-            "Bagi saya, pengalaman tampil bersama tim marching band dalam berbagai ajang kompetisi bergengsi adalah salah satu momen paling berharga dalam hidup. Proses latihan yang sangat disiplin, manajemen waktu yang ketat, dan dedikasi yang tinggi untuk mencapai kesempurnaan telah membentuk karakter kepemimpinan saya. Ketika ratusan anggota bergerak dan memainkan alat musik secara serentak di lapangan, tidak ada ruang untuk ego individu. Setiap langkah, nada, dan gerakan harus selaras sempurna. Sama halnya dalam membangun proyek teknologi atau bisnis, kolaborasi tim yang solid, komunikasi yang transparan, serta pemahaman mendalam akan peran masing-masing adalah kunci utama untuk mencapai kesuksesan yang berkesinambungan dan mengatasi berbagai rintangan.",
-            "Kecerdasan buatan dan machine learning saat ini telah merevolusi berbagai aspek kehidupan manusia, mulai dari cara kita berkomunikasi, bekerja, hingga menyelesaikan permasalahan sehari-hari yang rumit. Saya sangat antusias untuk mendalami bidang ini lebih jauh karena saya percaya bahwa teknologi mutakhir harus digunakan sebagai alat bantu untuk meningkatkan potensi dan produktivitas umat manusia secara keseluruhan. Melalui eksplorasi data yang mendalam dan pemanfaatan algoritma cerdas, kita dapat menemukan pola-pola tersembunyi yang sebelumnya tidak terlihat sama sekali. Dengan fondasi logika matematika yang kuat, saya berkomitmen penuh untuk terus berinovasi, berkreasi, dan berkontribusi dalam menciptakan sistem-sistem yang lebih adaptif, cerdas, dan tentunya berdampak positif bagi masyarakat luas.",
-            "Manajemen waktu sering kali menjadi tantangan terbesar bagi seorang siswa yang sangat aktif dalam berbagai organisasi kepemudaan dan proyek-proyek kreatif di luar jam sekolah reguler. Namun, justru di situlah letak proses pembelajaran yang sesungguhnya. Saya mulai belajar untuk menyusun skala prioritas dengan bijak, menyeimbangkan secara adil antara tanggung jawab akademis yang menuntut, eksplorasi teknologi terapan, serta hasrat dan hobi di bidang seni musik. Kehidupan ini rasanya terlalu singkat dan berharga jika hanya dihabiskan dengan berdiam diri di dalam zona nyaman semata. Oleh karena itu, saya selalu proaktif menantang diri sendiri untuk mempelajari hal-hal baru dan menerapkannya dalam proyek nyata."
+            "My journey in the world of technology began with a simple yet profound curiosity about how computers work. From the very first line of code I wrote to designing more complex software architectures, every process has always brought its own satisfaction. Programming skills are not just about memorizing syntax, but rather about how we solve problems efficiently, creatively, and logically. Much like in a symphony, where each instrument has its own role to create beautiful harmony, lines of code written meticulously and structurally will also produce a robust application that provides real solutions for many people. This world keeps evolving, and adapting is the ultimate key.",
+            "For me, the experience of performing with the marching band in various prestigious competitions is one of the most precious moments in life. The highly disciplined rehearsal processes, strict time management, and high dedication to achieving perfection have shaped my leadership character. When hundreds of members move and play musical instruments simultaneously on the field, there is no room for individual ego. Every step, note, and movement must be perfectly synchronized. Similarly, in building technology projects or businesses, solid team collaboration, transparent communication, and a deep understanding of each other's roles are the main keys to achieving sustainable success and overcoming various obstacles.",
+            "Artificial intelligence and machine learning have currently revolutionized various aspects of human life, from how we communicate and work, to how we solve complex daily problems. I am very enthusiastic about delving deeper into this field because I believe that cutting-edge technology must be used as a tool to enhance the potential and productivity of humanity as a whole. Through deep data exploration and the utilization of smart algorithms, we can discover hidden patterns that were previously completely invisible. With a strong foundation in mathematical logic, I am fully committed to continuing to innovate, create, and contribute to building systems that are more adaptive, intelligent, and certainly have a positive impact on the broader society.",
+            "Time management often becomes the greatest challenge for a student who is highly active in various youth organizations and creative projects outside of regular school hours. However, that is exactly where the real learning process lies. I started learning to set priorities wisely, fairly balancing demanding academic responsibilities, applied technology exploration, as well as passions and hobbies in the musical arts. This life feels too short and valuable to be spent merely staying silent within a comfort zone. Therefore, I am always proactively challenging myself to learn new things and apply them in real-world projects."
         ];
 
         // ASMR Keyboard Sound Generator (Zero bloat!)
