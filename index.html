@@ -224,14 +224,27 @@
                         "Lagu ini sangat manis dan memiliki tempat yang begitu spesial di hati saya. Sebuah mahakarya yang saya bawakan dengan sangat bangga pada ajang <a href="https://www.youtube.com/watch?v=SGyyhEg5S0Q" target="_blank" class="text-rust hover:underline font-semibold">Batavia Marching Competition 2024</a>. Lebih dari sekadar melodi, lagu ini adalah rekaman momen emosional saat saya bertemu dengan seseorang yang sangat saya banggakan. Ini adalah pengiring untuk tahun terbaik dan puncak masa SMP saya, di mana semua impian dan manifestasi akhirnya terwujud."
                     </p>
                 </div>
-                <div class="w-full md:w-[320px] lg:w-[380px] flex flex-col shrink-0">
+                <div class="w-full md:w-[320px] lg:w-[380px] flex flex-col items-center shrink-0">
+                    
+                    <!-- Vinyl Record Animation -->
+                    <div class="relative w-40 h-40 mb-6 drop-shadow-xl transition-transform duration-500 hover:scale-105">
+                        <div id="vinylRecord" class="w-full h-full relative origin-center animate-[spin_4s_linear_infinite]" style="animation-play-state: paused;">
+                            <!-- Vinyl disc -->
+                            <img src="assets/images/vinyl.png" alt="Vinyl Record" class="w-full h-full object-contain z-10 relative pointer-events-none">
+                            <!-- Album Cover (Label) -->
+                            <img src="assets/images/album_cover.png" alt="The Planets Album Cover" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[35%] h-[35%] rounded-full object-cover z-20 pointer-events-none shadow-inner border border-black/10">
+                            <!-- Spindle Hole -->
+                            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-[#FBF9F4] rounded-full z-30 shadow-inner border border-black/20"></div>
+                        </div>
+                    </div>
+
                     <audio id="audioTrack" preload="metadata">
                         <source src="assets/audio/jupiter.m4a" type="audio/mp4">
                         <source src="assets/audio/jupiter.m4a" type="audio/x-m4a">
                         Browser Anda tidak mendukung pemutar audio.
                     </audio>
                     <!-- Custom Player UI -->
-                    <div class="flex items-center gap-4 bg-white border border-ink/10 shadow-sm rounded-full p-2 pr-5">
+                    <div class="w-full flex items-center gap-4 bg-white border border-ink/10 shadow-sm rounded-full p-2 pr-5">
                         <button id="customPlayBtn" class="size-10 shrink-0 bg-rust text-white rounded-full flex items-center justify-center hover:bg-rust/90 hover:scale-105 active:scale-95 transition-all shadow-md focus:outline-none">
                             <svg id="playIcon" class="size-5 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                             <svg id="pauseIcon" class="size-5 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
@@ -1206,6 +1219,7 @@
             const progressBar = document.getElementById('audioProgressBar');
             const currentTimeEl = document.getElementById('audioCurrentTime');
             const durationEl = document.getElementById('audioDuration');
+            const vinylRecord = document.getElementById('vinylRecord');
 
             function formatTime(seconds) {
                 if (isNaN(seconds)) return "0:00";
@@ -1227,10 +1241,12 @@
                         audioTrack.play();
                         playIcon.classList.add('hidden');
                         pauseIcon.classList.remove('hidden');
+                        if (vinylRecord) vinylRecord.style.animationPlayState = 'running';
                     } else {
                         audioTrack.pause();
                         playIcon.classList.remove('hidden');
                         pauseIcon.classList.add('hidden');
+                        if (vinylRecord) vinylRecord.style.animationPlayState = 'paused';
                     }
                 });
 
@@ -1256,6 +1272,7 @@
                     pauseIcon.classList.add('hidden');
                     progressFill.style.width = '0%';
                     audioTrack.currentTime = 0;
+                    if (vinylRecord) vinylRecord.style.animationPlayState = 'paused';
                 });
             }
         });
