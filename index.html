@@ -63,36 +63,35 @@
 
 
     <!-- Mobile Bottom Nav -->
-    <nav class="fixed inset-x-4 bottom-4 z-50 flex items-center justify-between rounded-2xl border border-white/70 bg-white/90 shadow-lg backdrop-blur-xl lg:hidden font-mukta text-[11px] font-bold text-stone px-2 py-1">
-        <a href="#about" class="flex flex-col items-center justify-center gap-1 p-2 w-1/4 hover:text-rust transition-colors">
+    <nav class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-ink/10 flex lg:hidden items-center justify-between px-6 pb-safe pt-2 z-50">
+        <a href="#about" class="nav-link mobile-link flex flex-col items-center justify-center gap-1 p-2 w-1/4 hover:text-rust transition-colors text-stone">
             <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-            <span>Tentang</span>
+            <span class="text-xs">Tentang</span>
         </a>
-        <a href="#music" class="flex flex-col items-center justify-center gap-1 p-2 w-1/4 hover:text-rust transition-colors">
+        <a href="#music" class="nav-link mobile-link flex flex-col items-center justify-center gap-1 p-2 w-1/4 hover:text-rust transition-colors text-stone">
             <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/></svg>
-            <span>Musik</span>
+            <span class="text-xs">Musik</span>
         </a>
-        <a href="#gallery" class="flex flex-col items-center justify-center gap-1 p-2 w-1/4 hover:text-rust transition-colors">
+        <a href="#gallery" class="nav-link mobile-link flex flex-col items-center justify-center gap-1 p-2 w-1/4 hover:text-rust transition-colors text-stone">
             <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-            <span>Galeri</span>
+            <span class="text-xs">Galeri</span>
         </a>
-        <a href="#game" class="flex flex-col items-center justify-center gap-1 p-2 w-1/4 hover:text-rust transition-colors text-rust">
-            <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            <span>Game</span>
+        <a href="#organization" class="nav-link mobile-link flex flex-col items-center justify-center gap-1 p-2 w-1/4 hover:text-rust transition-colors text-stone">
+            <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            <span class="text-xs">Organisasi</span>
         </a>
     </nav>
 
     <!-- Desktop Nav -->
     <nav class="fixed left-1/2 top-6 z-50 w-max -translate-x-1/2 items-center gap-10 rounded-full glass-pill p-2 hidden lg:flex">
-
         <div class="flex items-center gap-1 font-mukta text-sm font-semibold text-ink">
-            <a href="#about" class="rounded-xl px-4 py-2 hover:bg-[#F2F0E9] transition-colors">Tentang</a>
-            <a href="#music" class="rounded-xl px-4 py-2 hover:bg-[#F2F0E9] transition-colors">Musik</a>
-            <a href="#gallery" class="rounded-xl px-4 py-2 hover:bg-[#F2F0E9] transition-colors">Galeri</a>
-            <a href="#organization" class="rounded-xl px-4 py-2 hover:bg-[#F2F0E9] transition-colors">Organisasi</a>
+            <a href="#about" class="nav-link desktop-link rounded-xl px-4 py-2 hover:bg-[#F2F0E9] transition-colors">Tentang</a>
+            <a href="#music" class="nav-link desktop-link rounded-xl px-4 py-2 hover:bg-[#F2F0E9] transition-colors">Musik</a>
+            <a href="#gallery" class="nav-link desktop-link rounded-xl px-4 py-2 hover:bg-[#F2F0E9] transition-colors">Galeri</a>
+            <a href="#organization" class="nav-link desktop-link rounded-xl px-4 py-2 hover:bg-[#F2F0E9] transition-colors">Organisasi</a>
         </div>
-        <a href="#contact" class="flex h-10 cursor-pointer items-center justify-center gap-2 rounded-full px-5 border border-ink/15 hover:bg-[#F2F0E9] transition-colors">
-            <span class="font-mukta text-sm font-semibold text-ink">Kontak Saya</span>
+        <a href="#contact" class="nav-link desktop-link flex h-10 cursor-pointer items-center justify-center gap-2 rounded-full px-5 border border-ink/15 hover:bg-[#F2F0E9] transition-colors">
+            <span class="font-mukta text-sm font-semibold text-ink transition-colors">Kontak Saya</span>
         </a>
     </nav>
 
@@ -1275,6 +1274,72 @@
                     if (vinylRecord) vinylRecord.style.animationPlayState = 'paused';
                 });
             }
+
+            // Active Navigation Highlighting & URL Hash Update
+            const sections = document.querySelectorAll("section[id]");
+            const navLinks = document.querySelectorAll(".nav-link");
+            
+            const observerOptions = {
+                root: null,
+                rootMargin: "-20% 0px -60% 0px",
+                threshold: 0
+            };
+            
+            const observerCallback = (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.getAttribute("id");
+                        
+                        // Update URL Hash without jumping
+                        if (history.replaceState) {
+                            history.replaceState(null, null, `#${id}`);
+                        }
+                        
+                        // Update Nav Links styling
+                        navLinks.forEach((link) => {
+                            if (link.getAttribute("href") === `#${id}`) {
+                                // Desktop active style
+                                if (link.classList.contains('desktop-link')) {
+                                    link.classList.add('bg-[#F2F0E9]', 'text-rust');
+                                }
+                                // Mobile active style
+                                if (link.classList.contains('mobile-link')) {
+                                    link.classList.add('text-rust');
+                                    link.classList.remove('text-stone');
+                                }
+                                // Special case for contact button span
+                                if (link.getAttribute("href") === '#contact') {
+                                    const span = link.querySelector('span');
+                                    if(span) {
+                                        span.classList.add('text-rust');
+                                        span.classList.remove('text-ink');
+                                    }
+                                }
+                            } else {
+                                // Desktop inactive style
+                                if (link.classList.contains('desktop-link')) {
+                                    link.classList.remove('bg-[#F2F0E9]', 'text-rust');
+                                }
+                                // Mobile inactive style
+                                if (link.classList.contains('mobile-link')) {
+                                    link.classList.remove('text-rust');
+                                    link.classList.add('text-stone');
+                                }
+                                if (link.getAttribute("href") === '#contact') {
+                                    const span = link.querySelector('span');
+                                    if(span) {
+                                        span.classList.remove('text-rust');
+                                        span.classList.add('text-ink');
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
+            };
+            
+            const observer = new IntersectionObserver(observerCallback, observerOptions);
+            sections.forEach((sec) => observer.observe(sec));
         });
     </script>
 </body>
