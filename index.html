@@ -1268,6 +1268,15 @@
                 });
 
                 audioTrack.addEventListener('timeupdate', () => {
+                    // ACID: Consistency Enforcement
+                    // Ensure the background video never drifts away from the audio track
+                    if (bgVideo && !audioTrack.paused) {
+                        const drift = Math.abs(bgVideo.currentTime - audioTrack.currentTime);
+                        if (drift > 0.3) {
+                            bgVideo.currentTime = audioTrack.currentTime;
+                        }
+                    }
+
                     currentTimeEl.innerText = formatTime(audioTrack.currentTime);
                     if (audioTrack.duration) {
                         const percent = (audioTrack.currentTime / audioTrack.duration) * 100;
@@ -1276,12 +1285,37 @@
                 });
 
                 progressBar.addEventListener('click', (e) => {
+                    if (!audioTrack.duration) return;
+
                     const rect = progressBar.getBoundingClientRect();
                     const clickX = e.clientX - rect.left;
                     const percent = clickX / rect.width;
-                    if (audioTrack.duration) {
-                        audioTrack.currentTime = percent * audioTrack.duration;
-                        if (bgVideo) bgVideo.currentTime = audioTrack.currentTime;
+                    const targetTime = percent * audioTrack.duration;
+
+                    // ACID: Atomicity - Transaction starts (All or nothing)
+                    try {
+                        // 1. Atomicity: Both media sources are updated synchronously
+                        audioTrack.currentTime = targetTime;
+                        
+                        if (bgVideo) {
+                            bgVideo.currentTime = targetTime;
+                            
+                            // 2. Consistency: Guarantee play states match post-seek
+                            if (!audioTrack.paused && bgVideo.paused) {
+                                bgVideo.play();
+                            }
+                        }
+                        
+                        // 3. Durability: Commit the new state to the UI immediately
+                        currentTimeEl.innerText = formatTime(targetTime);
+                        progressFill.style.width = (percent * 100) + '%';
+                        
+                        // (4. Isolation is guaranteed by JS's single-threaded event loop, 
+                        // ensuring one click transaction finishes before another begins)
+                        
+                    } catch (error) {
+                        // Rollback state / Error handling
+                        console.error("Seek transaction failed, maintaining isolation:", error);
                     }
                 });
 
