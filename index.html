@@ -244,21 +244,7 @@
                 </ul>
             </div>
 
-            <!-- Carousel Controls -->
-            <div class="flex items-center justify-center gap-4 mt-12 z-30">
-                <button onclick="carouselPrev()" class="size-11 rounded-full bg-white shadow-md border border-ink/10 flex items-center justify-center text-ink hover:text-rust hover:scale-110 active:scale-95 transition-all" title="Slide Sebelumnya">
-                    <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-                </button>
 
-                <!-- Dots Indicators -->
-                <div id="carouselDots" class="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white/80 backdrop-blur-md shadow-sm border border-ink/10 max-w-[280px] overflow-x-auto">
-                    <!-- Dynamic Dots -->
-                </div>
-
-                <button onclick="carouselNext()" class="size-11 rounded-full bg-white shadow-md border border-ink/10 flex items-center justify-center text-ink hover:text-rust hover:scale-110 active:scale-95 transition-all" title="Slide Selanjutnya">
-                    <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                </button>
-            </div>
 
         </div>
     </section>
@@ -636,19 +622,15 @@
         let currentCarouselIndex = 0;
         let carouselInterval = null;
         let carouselSlideEls = [];
-        let carouselDotEls = [];
         let isParallaxTicking = false;
 
         function initCarousel() {
             const track = document.getElementById('carouselTrack');
-            const dotsContainer = document.getElementById('carouselDots');
             const container = document.getElementById('carouselContainer');
             if (!track || !container) return;
 
             track.innerHTML = '';
-            if (dotsContainer) dotsContainer.innerHTML = '';
             carouselSlideEls = [];
-            carouselDotEls = [];
 
             const containerWidth = container.offsetWidth || 760;
             const gap = 32;
@@ -703,14 +685,6 @@
 
                 track.appendChild(li);
                 carouselSlideEls.push(li);
-
-                if (dotsContainer) {
-                    const dot = document.createElement('button');
-                    dot.className = `size-2.5 rounded-full transition-all duration-300 bg-stone/30`;
-                    dot.onclick = () => goToCarouselSlide(index);
-                    dotsContainer.appendChild(dot);
-                    carouselDotEls.push(dot);
-                }
             });
 
             updateCarousel();
@@ -738,14 +712,6 @@
                     li.style.transform = 'scale(0.88) rotateX(8deg)';
                     li.style.opacity = '0.35';
                     li.style.zIndex = '10';
-                }
-            });
-
-            carouselDotEls.forEach((dot, idx) => {
-                if (idx === currentCarouselIndex) {
-                    dot.className = 'size-2.5 rounded-full transition-all duration-300 bg-rust w-6';
-                } else {
-                    dot.className = 'size-2.5 rounded-full transition-all duration-300 bg-stone/30';
                 }
             });
         }
