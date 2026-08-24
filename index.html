@@ -992,9 +992,22 @@
                 
                 characters.forEach(span => span.classList.remove("active"));
                 if (charIndex < characters.length) {
-                    characters[charIndex].classList.add("active");
+                    let activeSpan = characters[charIndex];
+                    activeSpan.classList.add("active");
+                    
+                    // Auto-scroll logic: keep the active line in view
+                    if (activeSpan.offsetTop > typingContainer.scrollTop + typingContainer.clientHeight - 40) {
+                        typingContainer.scroll({
+                            top: activeSpan.offsetTop - typingContainer.clientHeight / 2,
+                            behavior: 'smooth'
+                        });
+                    } else if (activeSpan.offsetTop < typingContainer.scrollTop) {
+                        typingContainer.scroll({
+                            top: activeSpan.offsetTop - 20,
+                            behavior: 'smooth'
+                        });
+                    }
                 }
-
                 let wpm = Math.round(((charIndex - mistakes) / 5) / (maxTime - timeLeft) * 60);
                 wpm = wpm < 0 || !wpm || wpm === Infinity ? 0 : wpm;
                 
@@ -1031,6 +1044,7 @@
             wpmTag.innerText = 0;
             mistakeTag.innerText = 0;
             cpmTag.innerText = 0;
+            typingContainer.scrollTop = 0;
         }
 
         // Initialize on DOM ready
