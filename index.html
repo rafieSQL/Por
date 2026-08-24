@@ -591,7 +591,7 @@
                 const stackIndex = (idx - currentCardIndex + cardStackItems.length) % cardStackItems.length;
                 cardEl.style.transform = `translate3d(0, ${stackIndex * -CARD_OFFSET}px, 0) scale(${1 - stackIndex * SCALE_FACTOR})`;
                 cardEl.style.zIndex = `${cardStackItems.length - stackIndex}`;
-                cardEl.style.opacity = stackIndex > 1 ? '0' : `${1 - stackIndex * 0.15}`;
+                cardEl.style.opacity = stackIndex > 3 ? '0' : `${1 - stackIndex * 0.15}`;
             });
         }
 
