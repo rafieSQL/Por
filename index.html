@@ -32,6 +32,9 @@
         }
     </script>
     <style>
+        .text-depressed {
+            text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.9), 0px 0px 8px rgba(255, 255, 255, 0.7);
+        }
         body { 
             font-family: 'Mukta', sans-serif; 
             background-color: #FBF9F4; 
@@ -287,7 +290,7 @@
 
                 <!-- Right: Text & Controls -->
                 <div class="text-left flex-1 flex flex-col w-full relative z-10">
-                    <div class="mb-3 sm:mb-6">
+                    <div id="playerTextContainer" class="mb-3 sm:mb-6 transition-all duration-700">
                         <h3 class="font-inter text-sm sm:text-xl lg:text-2xl font-bold text-ink leading-tight line-clamp-2">
                             Gustav Holst, The Planets: Jupiter
                         </h3>
@@ -1184,6 +1187,7 @@
             const durationEl = document.getElementById('audioDuration');
             const vinylRecord = document.getElementById('vinylRecord');
             const bgVideo = document.getElementById('bgVideo');
+            const playerText = document.getElementById('playerTextContainer');
 
             function formatTime(seconds) {
                 if (isNaN(seconds)) return "0:00";
@@ -1211,6 +1215,7 @@
                             playIcon.classList.add('hidden');
                             pauseIcon.classList.remove('hidden');
                             if (vinylRecord) vinylRecord.style.animationPlayState = 'running';
+                            if (playerText) playerText.classList.add('text-depressed');
                         }).catch(error => {
                             console.error("Playback rejected", error);
                         });
@@ -1224,6 +1229,7 @@
                         playIcon.classList.remove('hidden');
                         pauseIcon.classList.add('hidden');
                         if (vinylRecord) vinylRecord.style.animationPlayState = 'paused';
+                        if (playerText) playerText.classList.remove('text-depressed');
                     }
                 });
 
@@ -1260,6 +1266,7 @@
                     if (bgVideo) bgVideo.classList.remove('opacity-20');
                     if (bgVideo) bgVideo.classList.add('opacity-0');
                     if (vinylRecord) vinylRecord.style.animationPlayState = 'paused';
+                    if (playerText) playerText.classList.remove('text-depressed');
                 });
             }
 
