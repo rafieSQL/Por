@@ -1097,9 +1097,10 @@
 
             // Carousel: Mouse Wheel / Scroll Pad / Trackpad Scroll (Kiri/Kanan & Atas/Bawah)
             const carouselContainer = document.getElementById('carouselContainer');
-            if (carouselContainer) {
+            const gallerySection = document.getElementById('gallery');
+            if (carouselContainer && gallerySection) {
                 let wheelThrottle = false;
-                carouselContainer.addEventListener('wheel', (e) => {
+                gallerySection.addEventListener('wheel', (e) => {
                     // Hanya izinkan scroll horizontal (mousepad kiri/kanan) untuk ganti foto
                     if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 15) {
                         e.preventDefault();
@@ -1122,7 +1123,7 @@
                 // Carousel: Desktop Cursor Drag (Geser menggunakan mouse drag)
                 let isMouseDown = false;
                 let mouseStartX = 0;
-                carouselContainer.addEventListener('mousedown', (e) => {
+                gallerySection.addEventListener('mousedown', (e) => {
                     isMouseDown = true;
                     mouseStartX = e.clientX;
                     clearInterval(carouselInterval);
@@ -1141,12 +1142,12 @@
 
                 // Carousel: Mobile Touch Swiping (Layar Sentuh HP)
                 let touchStartX = 0;
-                carouselContainer.addEventListener('touchstart', e => {
+                gallerySection.addEventListener('touchstart', e => {
                     touchStartX = e.changedTouches[0].screenX;
                     clearInterval(carouselInterval);
                 }, {passive: true});
                 
-                carouselContainer.addEventListener('touchend', e => {
+                gallerySection.addEventListener('touchend', e => {
                     let touchEndX = e.changedTouches[0].screenX;
                     if (touchStartX - touchEndX > 40) {
                         carouselNext();
