@@ -261,9 +261,14 @@
             <!-- Music Player -->
             <div id="playerContainer" class="relative bg-[#FBF9F4] rounded-[28px] overflow-hidden p-4 sm:p-6 lg:p-10 flex flex-row items-center gap-4 sm:gap-8 lg:gap-12 border border-ink/10 shadow-inner transition-colors duration-700">
                 
-                <!-- Background Video (Single Source of Truth for Audio & Video) -->
-                <video id="bgVideo" preload="metadata" playsinline class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 pointer-events-none z-0 mix-blend-luminosity brightness-110">
-                    <source src="assets/audio/jupiter_crisp.mp4" type="video/mp4">
+                <!-- Audio Track (Lightweight Source of Truth) -->
+                <audio id="audioTrack" preload="metadata">
+                    <source src="assets/audio/jupiter_audio.m4a" type="audio/mp4">
+                </audio>
+
+                <!-- Background Video (Muted, heavily optimized for GPU) -->
+                <video id="bgVideo" preload="metadata" playsinline muted loop class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 pointer-events-none z-0">
+                    <source src="assets/audio/jupiter_bg.mp4" type="video/mp4">
                 </video>
 
                 <!-- Left: Vinyl Graphic -->
@@ -1166,7 +1171,7 @@
                     restartCardTimer();
                 }, {passive: true});
             }
-            // Custom Audio Player Logic
+            // Custom Audio Player Logic (Optimal ACID Mechanism)
             const audioTrack = document.getElementById('audioTrack');
             const playBtn = document.getElementById('customPlayBtn');
             const playIcon = document.getElementById('playIcon');
@@ -1176,7 +1181,7 @@
             const currentTimeEl = document.getElementById('audioCurrentTime');
             const durationEl = document.getElementById('audioDuration');
             const vinylRecord = document.getElementById('vinylRecord');
-            const bgVideo = document.getElementById('bgVideo'); // Single Source of Truth
+            const bgVideo = document.getElementById('bgVideo');
 
             function formatTime(seconds) {
                 if (isNaN(seconds)) return "0:00";
@@ -1185,19 +1190,22 @@
                 return m + ":" + (s < 10 ? "0" : "") + s;
             }
 
-            if (bgVideo && playBtn) {
-                if (bgVideo.readyState >= 1) {
-                    durationEl.innerText = formatTime(bgVideo.duration);
+            if (audioTrack && playBtn) {
+                if (audioTrack.readyState >= 1) {
+                    durationEl.innerText = formatTime(audioTrack.duration);
                 }
-                bgVideo.addEventListener('loadedmetadata', () => {
-                    durationEl.innerText = formatTime(bgVideo.duration);
+                audioTrack.addEventListener('loadedmetadata', () => {
+                    durationEl.innerText = formatTime(audioTrack.duration);
                 });
 
                 playBtn.addEventListener('click', () => {
-                    if (bgVideo.paused) {
-                        bgVideo.play().then(() => {
-                            bgVideo.classList.remove('opacity-0');
-                            bgVideo.classList.add('opacity-40');
+                    if (audioTrack.paused) {
+                        audioTrack.play().then(() => {
+                            if (bgVideo) bgVideo.play().catch(()=>{});
+                            if (bgVideo) {
+                                bgVideo.classList.remove('opacity-0');
+                                bgVideo.classList.add('opacity-20');
+                            }
                             playIcon.classList.add('hidden');
                             pauseIcon.classList.remove('hidden');
                             if (vinylRecord) vinylRecord.style.animationPlayState = 'running';
@@ -1205,45 +1213,50 @@
                             console.error("Playback rejected", error);
                         });
                     } else {
-                        bgVideo.pause();
-                        bgVideo.classList.remove('opacity-40');
-                        bgVideo.classList.add('opacity-0');
+                        audioTrack.pause();
+                        if (bgVideo) bgVideo.pause();
+                        if (bgVideo) {
+                            bgVideo.classList.remove('opacity-20');
+                            bgVideo.classList.add('opacity-0');
+                        }
                         playIcon.classList.remove('hidden');
                         pauseIcon.classList.add('hidden');
                         if (vinylRecord) vinylRecord.style.animationPlayState = 'paused';
                     }
                 });
 
-                bgVideo.addEventListener('timeupdate', () => {
-                    currentTimeEl.innerText = formatTime(bgVideo.currentTime);
-                    if (bgVideo.duration) {
-                        const percent = (bgVideo.currentTime / bgVideo.duration) * 100;
+                audioTrack.addEventListener('timeupdate', () => {
+                    currentTimeEl.innerText = formatTime(audioTrack.currentTime);
+                    if (audioTrack.duration) {
+                        const percent = (audioTrack.currentTime / audioTrack.duration) * 100;
                         progressFill.style.width = percent + '%';
                     }
                 });
 
                 progressBar.addEventListener('click', (e) => {
-                    if (!bgVideo.duration) return;
+                    if (!audioTrack.duration) return;
 
                     const rect = progressBar.getBoundingClientRect();
                     const clickX = e.clientX - rect.left;
                     const percent = clickX / rect.width;
-                    const targetTime = percent * bgVideo.duration;
+                    const targetTime = percent * audioTrack.duration;
 
-                    // Absolute ACID: Single element handles seeking natively
-                    bgVideo.currentTime = targetTime;
+                    // Audio handles seeking natively
+                    audioTrack.currentTime = targetTime;
+                    if (bgVideo) bgVideo.currentTime = targetTime;
                     
                     currentTimeEl.innerText = formatTime(targetTime);
                     progressFill.style.width = (percent * 100) + '%';
                 });
 
-                bgVideo.addEventListener('ended', () => {
+                audioTrack.addEventListener('ended', () => {
                     playIcon.classList.remove('hidden');
                     pauseIcon.classList.add('hidden');
                     progressFill.style.width = '0%';
-                    bgVideo.currentTime = 0;
-                    bgVideo.classList.remove('opacity-40');
-                    bgVideo.classList.add('opacity-0');
+                    audioTrack.currentTime = 0;
+                    if (bgVideo) bgVideo.currentTime = 0;
+                    if (bgVideo) bgVideo.classList.remove('opacity-20');
+                    if (bgVideo) bgVideo.classList.add('opacity-0');
                     if (vinylRecord) vinylRecord.style.animationPlayState = 'paused';
                 });
             }
