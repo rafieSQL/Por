@@ -985,37 +985,41 @@
             cachedCharacters[0].classList.add("active");
         }
 
-        function initTyping() {
-            let typedChar = inpField.value.split("")[charIndex];
+                function initTyping() {
+            let val = inpField.value;
             
-            if (charIndex < cachedCharacters.length - 1 && timeLeft > 0) {
-                // Play ASMR sound
-                playTypingSound();
-
+            if (timeLeft > 0 && charIndex < cachedCharacters.length) {
                 if (!isTyping) {
                     timer = setInterval(initTimer, 1000);
                     isTyping = true;
                 }
                 
-                if (typedChar == null) {
-                    if (charIndex > 0) {
+                // Play ASMR sound
+                if (val.length !== charIndex) {
+                    playTypingSound();
+                }
+
+                if (val.length < charIndex) {
+                    while (charIndex > val.length) {
                         charIndex--;
                         if (cachedCharacters[charIndex].classList.contains("incorrect")) {
                             mistakes--;
                         }
-                        cachedCharacters[charIndex].className = ""; // clear classes
+                        cachedCharacters[charIndex].className = "";
                     }
                 } else {
-                    if (cachedCharacters[charIndex].innerText === typedChar) {
-                        cachedCharacters[charIndex].classList.add("correct");
-                    } else {
-                        mistakes++;
-                        cachedCharacters[charIndex].classList.add("incorrect");
+                    while (charIndex < val.length && charIndex < cachedCharacters.length) {
+                        let typedChar = val[charIndex];
+                        if (cachedCharacters[charIndex].innerText === typedChar) {
+                            cachedCharacters[charIndex].classList.add("correct");
+                        } else {
+                            mistakes++;
+                            cachedCharacters[charIndex].classList.add("incorrect");
+                        }
+                        charIndex++;
                     }
-                    charIndex++;
                 }
                 
-                // Remove active class safely
                 const currentActive = typingText.querySelector("span.active");
                 if (currentActive) currentActive.classList.remove("active");
                 
@@ -1023,28 +1027,22 @@
                     let activeSpan = cachedCharacters[charIndex];
                     activeSpan.classList.add("active");
                     
-                    // Auto-scroll logic: keep the active line in view
                     if (activeSpan.offsetTop > typingContainer.scrollTop + typingContainer.clientHeight - 40) {
-                        typingContainer.scroll({
-                            top: activeSpan.offsetTop - typingContainer.clientHeight / 2,
-                            behavior: 'smooth'
-                        });
+                        typingContainer.scrollTop = activeSpan.offsetTop - typingContainer.clientHeight / 2;
                     } else if (activeSpan.offsetTop < typingContainer.scrollTop) {
-                        typingContainer.scroll({
-                            top: activeSpan.offsetTop - 20,
-                            behavior: 'smooth'
-                        });
+                        typingContainer.scrollTop = activeSpan.offsetTop - 20;
                     }
                 }
-                let wpm = Math.round(((charIndex - mistakes) / 5) / (maxTime - timeLeft) * 60);
-                wpm = wpm < 0 || !wpm || wpm === Infinity ? 0 : wpm;
                 
-                wpmTag.innerText = wpm;
+                let timeElapsed = maxTime - timeLeft;
+                if (timeElapsed > 0) {
+                    let wpm = Math.round(((charIndex - mistakes) / 5) / timeElapsed * 60);
+                    wpm = wpm < 0 || !wpm || wpm === Infinity ? 0 : wpm;
+                    wpmTag.innerText = wpm;
+                }
+                
                 mistakeTag.innerText = mistakes;
                 cpmTag.innerText = charIndex - mistakes;
-            } else {
-                clearInterval(timer);
-                inpField.value = "";
             }
         }
 
