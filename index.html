@@ -632,9 +632,11 @@
         }
 
         function updateCardStack() {
+            const STACK_ROTATIONS = [0, 4, -3, 5, -2, 3, -4]; // 0 for front, scattered for the rest
             cardStackEls.forEach((cardEl, idx) => {
                 const stackIndex = (idx - currentCardIndex + cardStackItems.length) % cardStackItems.length;
-                cardEl.style.transform = `translate3d(0, ${stackIndex * -CARD_OFFSET}px, 0) scale(${1 - stackIndex * SCALE_FACTOR})`;
+                const rot = STACK_ROTATIONS[stackIndex % STACK_ROTATIONS.length];
+                cardEl.style.transform = `translate3d(0, ${stackIndex * -CARD_OFFSET}px, 0) scale(${1 - stackIndex * SCALE_FACTOR}) rotate(${rot}deg)`;
                 cardEl.style.zIndex = `${cardStackItems.length - stackIndex}`;
                 cardEl.style.opacity = stackIndex > 3 ? '0' : `${1 - stackIndex * 0.15}`;
             });
