@@ -165,13 +165,6 @@
                         <button type="button" data-time="30" class="time-mode-btn px-3.5 py-1 text-xs font-inter font-semibold rounded-full text-stone hover:text-ink transition-all">30s</button>
                         <button type="button" data-time="60" class="time-mode-btn px-3.5 py-1 text-xs font-inter font-semibold rounded-full bg-rust text-white shadow-xs transition-all">60s</button>
                     </div>
-
-                    <!-- Audio Toggle -->
-                    <button id="sound-toggle-btn" type="button" class="flex items-center gap-1.5 bg-[#F5F2EA] hover:bg-[#EBE7DC] px-3 py-1.5 rounded-full border border-ink/5 text-xs font-inter font-semibold text-stone transition-colors" title="Toggle Sound">
-                        <svg id="sound-icon-on" class="w-3.5 h-3.5 text-rust" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728M11 5L6 9H2v6h4l5 4V5z"/></svg>
-                        <svg id="sound-icon-off" class="w-3.5 h-3.5 text-stone/50 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"/></svg>
-                        <span id="sound-text">Sound ON</span>
-                    </button>
                 </div>
 
                 <!-- High Score Display -->
@@ -343,10 +336,6 @@
         const timeModeBtns = document.querySelectorAll(".time-mode-btn");
         const resultModal = document.getElementById("result-modal");
         const modalRestartBtn = document.getElementById("modal-restart-btn");
-        const soundToggleBtn = document.getElementById("sound-toggle-btn");
-        const soundIconOn = document.getElementById("sound-icon-on");
-        const soundIconOff = document.getElementById("sound-icon-off");
-        const soundText = document.getElementById("sound-text");
 
         // --- Game State ---
         let maxTime = 60;
@@ -362,28 +351,6 @@
         let totalTypedChars = 0;
         let totalMistakes = 0;
         let rawCorrectChars = 0;
-
-        // --- Sound UI ---
-        function updateSoundUI() {
-            if (isSoundEnabled) {
-                soundIconOn.classList.remove('hidden');
-                soundIconOff.classList.add('hidden');
-                soundText.textContent = "Sound ON";
-            } else {
-                soundIconOn.classList.add('hidden');
-                soundIconOff.classList.remove('hidden');
-                soundText.textContent = "Sound OFF";
-            }
-        }
-        updateSoundUI();
-
-        soundToggleBtn.addEventListener('click', () => {
-            initAudio();
-            isSoundEnabled = !isSoundEnabled;
-            localStorage.setItem('typing_sound_enabled', isSoundEnabled);
-            updateSoundUI();
-            inpField.focus();
-        });
 
         // --- High Scores ---
         function getBestKey() {
