@@ -863,63 +863,137 @@
             initCarousel();
             startCarouselTimer();
 
-            // Carousel: Mouse Wheel / Scroll Pad / Trackpad Scroll (Kiri/Kanan & Atas/Bawah)
+            // Carousel: Interactive Mousepad / Trackpad Scroll & Live Drag Animation
             const carouselContainer = document.getElementById('carouselContainer');
             const gallerySection = document.getElementById('gallery');
             if (carouselContainer && gallerySection) {
-                let lastWheelTime = 0;
+                let currentOffset = 0;
+                let wheelResetTimeout = null;
+
+                function applyLiveOffset(offset, animated = false) {
+                    const track = document.getElementById('carouselTrack');
+                    const container = document.getElementById('carouselContainer');
+                    if (!track || !container || isCarouselTransitioning) return;
+                    
+                    const containerWidth = container.offsetWidth || 760;
+                    const slideOffset = containerWidth + 32;
+                    const baseTranslate = -(ACTIVE_OFFSET * slideOffset);
+                    
+                    track.style.transition = animated ? 'transform 400ms cubic-bezier(0.25, 1, 0.5, 1)' : 'none';
+                    track.style.transform = `translate3d(${baseTranslate + offset}px, 0, 0)`;
+
+                    // Subtle dynamic tilt/scale feedback while scrolling slightly
+                    const normOffset = Math.max(-1, Math.min(1, offset / (slideOffset * 0.5)));
+                    const children = Array.from(track.children);
+                    if (children[ACTIVE_OFFSET]) {
+                        children[ACTIVE_OFFSET].style.transform = `scale(${1 - Math.abs(normOffset) * 0.08}) rotateY(${normOffset * -10}deg)`;
+                    }
+                }
+
+                function resetLiveOffset() {
+                    applyLiveOffset(0, true);
+                    currentOffset = 0;
+                    setTimeout(() => {
+                        updateSlideStyles();
+                    }, 400);
+                }
+
+                // Trackpad / Mousepad Wheel Scroll
                 gallerySection.addEventListener('wheel', (e) => {
-                    if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 15) {
-                        const now = performance.now();
-                        if (now - lastWheelTime > 600) {
-                            lastWheelTime = now;
-                            requestAnimationFrame(() => {
-                                if (e.deltaX > 0) {
-                                    carouselNext();
-                                } else {
-                                    carouselPrev();
-                                }
-                            });
+                    if (isCarouselTransitioning) return;
+
+                    const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : (e.shiftKey ? e.deltaY : 0);
+                    
+                    if (Math.abs(delta) > 2) {
+                        clearInterval(carouselInterval);
+                        clearTimeout(wheelResetTimeout);
+                        
+                        // Damped accumulation for smooth live response
+                        currentOffset -= delta * 0.8;
+                        
+                        const containerWidth = (carouselContainer.offsetWidth || 760) + 32;
+                        currentOffset = Math.max(-containerWidth * 0.4, Math.min(containerWidth * 0.4, currentOffset));
+                        
+                        applyLiveOffset(currentOffset, false);
+
+                        if (currentOffset < -60) {
+                            currentOffset = 0;
+                            carouselNext();
+                        } else if (currentOffset > 60) {
+                            currentOffset = 0;
+                            carouselPrev();
+                        } else {
+                            // Elastic spring-back if scroll didn't pass threshold
+                            wheelResetTimeout = setTimeout(() => {
+                                resetLiveOffset();
+                                restartCarouselTimer();
+                            }, 180);
                         }
                     }
                 }, { passive: true });
 
-                // Carousel: Desktop Cursor Drag (Geser menggunakan mouse drag)
+                // Desktop Cursor Drag
                 let isMouseDown = false;
                 let mouseStartX = 0;
+                let dragOffset = 0;
+
                 gallerySection.addEventListener('mousedown', (e) => {
+                    if (isCarouselTransitioning) return;
                     isMouseDown = true;
                     mouseStartX = e.clientX;
+                    dragOffset = 0;
                     clearInterval(carouselInterval);
                 });
-                window.addEventListener('mouseup', (e) => {
+
+                window.addEventListener('mousemove', (e) => {
+                    if (!isMouseDown || isCarouselTransitioning) return;
+                    dragOffset = (e.clientX - mouseStartX) * 0.85;
+                    applyLiveOffset(dragOffset, false);
+                });
+
+                window.addEventListener('mouseup', () => {
                     if (!isMouseDown) return;
                     isMouseDown = false;
-                    const diff = e.clientX - mouseStartX;
-                    if (diff < -45) {
+                    if (dragOffset < -50) {
+                        currentOffset = 0;
                         carouselNext();
-                    } else if (diff > 45) {
+                    } else if (dragOffset > 50) {
+                        currentOffset = 0;
                         carouselPrev();
+                    } else {
+                        resetLiveOffset();
                     }
                     restartCarouselTimer();
                 });
 
-                // Carousel: Mobile Touch Swiping (Layar Sentuh HP)
+                // Mobile Touch Swiping
                 let touchStartX = 0;
-                gallerySection.addEventListener('touchstart', e => {
-                    touchStartX = e.changedTouches[0].screenX;
+                let touchOffset = 0;
+                gallerySection.addEventListener('touchstart', (e) => {
+                    if (isCarouselTransitioning) return;
+                    touchStartX = e.touches[0].clientX;
+                    touchOffset = 0;
                     clearInterval(carouselInterval);
-                }, {passive: true});
-                
-                gallerySection.addEventListener('touchend', e => {
-                    let touchEndX = e.changedTouches[0].screenX;
-                    if (touchStartX - touchEndX > 40) {
+                }, { passive: true });
+
+                gallerySection.addEventListener('touchmove', (e) => {
+                    if (isCarouselTransitioning) return;
+                    touchOffset = (e.touches[0].clientX - touchStartX) * 0.85;
+                    applyLiveOffset(touchOffset, false);
+                }, { passive: true });
+
+                gallerySection.addEventListener('touchend', () => {
+                    if (touchOffset < -45) {
+                        currentOffset = 0;
                         carouselNext();
-                    } else if (touchEndX - touchStartX > 40) {
+                    } else if (touchOffset > 45) {
+                        currentOffset = 0;
                         carouselPrev();
+                    } else {
+                        resetLiveOffset();
                     }
                     restartCarouselTimer();
-                }, {passive: true});
+                }, { passive: true });
             }
             
             // CardStack: Touch Swiping & Scroll
