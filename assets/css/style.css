@@ -55,6 +55,26 @@ body {
     transition: all 0.2s ease;
 }
 
+/* Vinyl Record Smooth Rotation */
+.vinyl-record {
+    animation: vinyl-spin 6s linear infinite;
+    animation-play-state: paused;
+    transform-origin: center center;
+}
+
+.vinyl-record.is-playing {
+    animation-play-state: running;
+}
+
+@keyframes vinyl-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 /* Hero Entrance Animations */
 .hero-rise {
     animation: hero-rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
