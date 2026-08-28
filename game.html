@@ -40,55 +40,63 @@
     <style>
         /* Typing Game Styles */
         #typing-text-container::-webkit-scrollbar {
-            width: 14px;
+            width: 6px;
         }
         #typing-text-container::-webkit-scrollbar-track {
             background: transparent;
-            margin-block: 16px;
         }
         #typing-text-container::-webkit-scrollbar-thumb {
-            background: rgba(26, 23, 20, 0.15);
+            background: rgba(26, 23, 20, 0.12);
             border-radius: 9999px;
-            border: 4px solid transparent;
-            background-clip: padding-box;
         }
         #typing-text-container::-webkit-scrollbar-thumb:hover {
-            background: rgba(26, 23, 20, 0.3);
-            border: 4px solid transparent;
-            background-clip: padding-box;
+            background: rgba(26, 23, 20, 0.25);
         }
-        #typing-text span {
+        
+        .char {
             position: relative;
+            display: inline;
         }
-        #typing-text span.correct {
+        .char.correct {
             color: #2D8A14;
-            font-weight: 600;
         }
-        #typing-text span.incorrect {
-            color: #9E1C23;
-            background: #ffc0cb;
-            border-radius: 4px;
+        .char.incorrect {
+            color: #DC2626;
+            background-color: #FEE2E2;
+            border-radius: 2px;
         }
-        #typing-text span.active {
+        .char.current {
             color: #B0552F;
+            font-weight: 700;
         }
-        #typing-text span.active::before {
+        .char.current::after {
+            content: '';
             position: absolute;
-            content: "";
-            height: 2.5px;
-            width: 100%;
             bottom: -2px;
             left: 0;
-            border-radius: 5px;
-            background: #B0552F;
-            animation: blink 1s ease-in-out infinite;
+            right: 0;
+            height: 3px;
+            background-color: #B0552F;
+            border-radius: 2px;
+            animation: caret-pulse 0.9s ease-in-out infinite;
         }
-        @keyframes blink {
-            50% { opacity: 0; }
+        
+        .word {
+            display: inline-block;
+            margin-right: 0.45em;
+            margin-bottom: 0.25em;
+        }
+        .word.error-word {
+            text-decoration: underline wavy #DC2626;
+        }
+
+        @keyframes caret-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.15; }
         }
     </style>
 </head>
-<body class="antialiased selection:bg-rust/20 selection:text-ink min-h-screen flex flex-col">
+<body class="antialiased selection:bg-rust/20 selection:text-ink min-h-screen flex flex-col bg-cream text-ink">
 
     <!-- Mobile Bottom Nav -->
     <nav aria-label="Mobile Navigation" class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-ink/10 flex lg:hidden items-center justify-around px-2 pb-safe pt-2 z-50">
@@ -109,7 +117,7 @@
             <span class="text-[10px]">Org</span>
         </a>
         <a href="projects.html" class="flex flex-col items-center justify-center gap-1 p-2 hover:text-rust transition-colors text-stone">
-            <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
             <span class="text-[10px]">Projects</span>
         </a>
         <a href="game.html" class="flex flex-col items-center justify-center gap-1 p-2 text-rust transition-colors font-semibold">
@@ -132,9 +140,10 @@
     </nav>
 
     <!-- Main Header Banner -->
-    <header class="w-full pt-28 lg:pt-28 pb-6 px-5 lg:px-20 max-w-5xl mx-auto flex items-center justify-between">
+    <header class="w-full pt-24 lg:pt-28 pb-3 px-5 lg:px-20 max-w-5xl mx-auto flex items-center justify-between">
         <div>
-            <h1 class="font-inter text-2xl sm:text-3xl font-bold tracking-tight text-ink">Typing Speed Challenge</h1>
+            <h1 class="font-inter text-2xl sm:text-3xl font-bold tracking-tight text-ink">Typing Speed Test</h1>
+            <p class="font-mukta text-stone text-xs sm:text-sm mt-0.5">Test your speed & accuracy with smooth mechanical feedback</p>
         </div>
         <a href="index.html" class="flex items-center gap-2 font-mukta text-sm font-semibold text-stone hover:text-rust transition-colors bg-white px-4 py-2 rounded-full shadow-sm border border-ink/5">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
@@ -143,111 +152,112 @@
     </header>
 
     <!-- Main Content -->
-    <main class="flex-1 w-full max-w-5xl mx-auto px-5 lg:px-20 pb-20 pt-2">
-        <div class="relative overflow-hidden rounded-[36px] bg-[#FBF9F4] border border-ink/15 shadow-[0_16px_50px_rgba(26,23,20,0.06)] p-6 sm:p-10 lg:p-12 text-center">
+    <main class="flex-1 w-full max-w-5xl mx-auto px-5 lg:px-20 pb-20 pt-1 flex flex-col justify-start">
+        <div class="relative rounded-[32px] bg-white border border-ink/10 shadow-[0_12px_40px_rgba(26,23,20,0.05)] p-6 sm:p-8 lg:p-10 text-center">
             
-            <h2 class="font-inter text-2xl sm:text-3xl lg:text-4xl font-bold text-ink tracking-tight mb-2">
-                Typing Speed Test
-            </h2>
-            <p class="font-mukta text-stone text-sm sm:text-base max-w-xl mx-auto mb-6">
-                How many words can you type in one minute? Type the text below as fast and accurately as possible!
-            </p>
-
             <!-- Quick Options Bar -->
-            <div class="flex flex-wrap items-center justify-between gap-3 mb-6 px-2">
-                <!-- Mode / Time Select -->
-                <div class="flex items-center gap-1.5 bg-white p-1 rounded-full border border-ink/10 shadow-xs">
-                    <button type="button" data-time="15" class="time-mode-btn px-3 py-1 text-xs font-inter font-semibold rounded-full text-stone hover:text-ink transition-all">15s</button>
-                    <button type="button" data-time="30" class="time-mode-btn px-3 py-1 text-xs font-inter font-semibold rounded-full text-stone hover:text-ink transition-all">30s</button>
-                    <button type="button" data-time="60" class="time-mode-btn px-3 py-1 text-xs font-inter font-semibold rounded-full bg-rust text-white shadow-xs transition-all">60s</button>
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
+                <!-- Mode & Sound Controls -->
+                <div class="flex items-center gap-3">
+                    <!-- Mode Select -->
+                    <div class="flex items-center gap-1 bg-[#F5F2EA] p-1 rounded-full border border-ink/5" role="group" aria-label="Timer Mode">
+                        <button type="button" data-time="15" class="time-mode-btn px-3.5 py-1 text-xs font-inter font-semibold rounded-full text-stone hover:text-ink transition-all">15s</button>
+                        <button type="button" data-time="30" class="time-mode-btn px-3.5 py-1 text-xs font-inter font-semibold rounded-full text-stone hover:text-ink transition-all">30s</button>
+                        <button type="button" data-time="60" class="time-mode-btn px-3.5 py-1 text-xs font-inter font-semibold rounded-full bg-rust text-white shadow-xs transition-all">60s</button>
+                    </div>
+
+                    <!-- Audio Toggle -->
+                    <button id="sound-toggle-btn" type="button" class="flex items-center gap-1.5 bg-[#F5F2EA] hover:bg-[#EBE7DC] px-3 py-1.5 rounded-full border border-ink/5 text-xs font-inter font-semibold text-stone transition-colors" title="Toggle Sound">
+                        <svg id="sound-icon-on" class="w-3.5 h-3.5 text-rust" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728M11 5L6 9H2v6h4l5 4V5z"/></svg>
+                        <svg id="sound-icon-off" class="w-3.5 h-3.5 text-stone/50 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"/></svg>
+                        <span id="sound-text">Sound ON</span>
+                    </button>
                 </div>
 
-                <!-- High Score -->
-                <div class="flex items-center gap-3">
-                    <div class="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-full border border-ink/10 text-xs font-inter text-stone shadow-xs">
-                        <span class="text-rust font-bold">Best WPM:</span>
-                        <span id="best-wpm" class="font-extrabold text-ink">0</span>
-                    </div>
+                <!-- High Score Display -->
+                <div class="flex items-center gap-1.5 bg-[#F5F2EA] px-3.5 py-1.5 rounded-full border border-ink/5 text-xs font-inter text-stone">
+                    <span class="text-rust font-bold">Best:</span>
+                    <span id="best-wpm" class="font-extrabold text-ink">0</span>
+                    <span class="text-[10px] text-stone/70">WPM</span>
                 </div>
             </div>
 
             <!-- Typing Interface -->
-            <div class="bg-white rounded-[24px] shadow-sm border border-ink/10 p-6 sm:p-8 relative text-left">
-                <!-- Hidden input field -->
-                <input type="text" id="typing-input" class="opacity-0 absolute -z-10 w-0 h-0" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+            <div id="game-card" class="relative text-left">
+                <!-- Hidden accessible input field -->
+                <input type="text" id="typing-input" class="absolute top-0 left-0 opacity-0 pointer-events-none w-1 h-1" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-label="Typing test input">
                 
                 <!-- Typing Text Box -->
-                <div class="max-h-[170px] sm:max-h-[220px] overflow-y-auto cursor-pointer rounded-xl bg-black/5 p-5 border border-ink/5 relative transition-all ring-1 ring-transparent hover:ring-rust/30 focus-within:ring-rust" id="typing-text-container">
-                    <p id="typing-text" class="font-mukta text-lg sm:text-xl text-stone/80 leading-relaxed tracking-wide select-none"></p>
+                <div id="typing-text-container" class="h-[145px] sm:h-[165px] overflow-hidden cursor-text rounded-2xl bg-[#FAF8F3] p-5 sm:p-6 border border-ink/10 relative select-none ring-2 ring-transparent transition-all focus-within:ring-rust/30 hover:border-rust/30">
+                    <div id="typing-text" class="font-mukta text-xl sm:text-2xl text-stone/50 font-normal leading-[1.8] tracking-wide"></div>
                 </div>
                 
-                <p class="text-xs text-stone/70 mt-2.5 text-center flex items-center justify-center gap-1.5">
+                <p class="text-xs text-stone/60 mt-2 text-center flex items-center justify-center gap-1.5">
                     <svg class="w-3.5 h-3.5 text-rust/80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    Click the text box above or press any key on your keyboard to start typing!
+                    Click the box or start typing. Press <kbd class="px-1.5 py-0.5 text-[10px] font-mono bg-ink/5 border border-ink/10 rounded">Tab</kbd> to restart.
                 </p>
 
                 <!-- Game Status & Scoreboard -->
-                <div class="mt-6 pt-6 border-t border-ink/10 flex flex-wrap items-center justify-between gap-6">
+                <div class="mt-6 pt-5 border-t border-ink/10 flex flex-wrap items-center justify-between gap-5">
                     <!-- Stats -->
-                    <ul class="flex flex-wrap items-center gap-5 sm:gap-8 w-full sm:w-auto">
-                        <li class="flex flex-col">
-                            <span class="font-mukta text-[11px] sm:text-xs text-stone uppercase tracking-wider font-bold mb-1">Time Left</span>
-                            <span class="font-inter text-2xl font-extrabold text-ink"><b id="time-left">60</b>s</span>
-                        </li>
-                        <li class="flex flex-col relative pl-5 sm:pl-8 before:content-[''] before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:h-8 before:w-px before:bg-ink/10">
-                            <span class="font-mukta text-[11px] sm:text-xs text-stone uppercase tracking-wider font-bold mb-1">Mistakes</span>
-                            <span id="mistake-count" class="font-inter text-2xl font-extrabold text-rust">0</span>
-                        </li>
-                        <li class="flex flex-col relative pl-5 sm:pl-8 before:content-[''] before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:h-8 before:w-px before:bg-ink/10">
-                            <span class="font-mukta text-[11px] sm:text-xs text-stone uppercase tracking-wider font-bold mb-1">WPM</span>
-                            <span id="wpm-score" class="font-inter text-2xl font-extrabold text-[#47AB19]">0</span>
-                        </li>
-                        <li class="flex flex-col relative pl-5 sm:pl-8 before:content-[''] before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:h-8 before:w-px before:bg-ink/10">
-                            <span class="font-mukta text-[11px] sm:text-xs text-stone uppercase tracking-wider font-bold mb-1">CPM</span>
-                            <span id="cpm-score" class="font-inter text-2xl font-extrabold text-ink">0</span>
-                        </li>
-                        <li class="flex flex-col relative pl-5 sm:pl-8 before:content-[''] before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:h-8 before:w-px before:bg-ink/10">
-                            <span class="font-mukta text-[11px] sm:text-xs text-stone uppercase tracking-wider font-bold mb-1">Accuracy</span>
+                    <div class="flex flex-wrap items-center gap-4 sm:gap-7">
+                        <div class="flex flex-col">
+                            <span class="font-mukta text-[11px] sm:text-xs text-stone uppercase tracking-wider font-bold">Time Left</span>
+                            <span class="font-inter text-2xl font-extrabold text-ink"><b id="time-left">60</b><span class="text-sm font-normal text-stone">s</span></span>
+                        </div>
+                        <div class="h-8 w-px bg-ink/10"></div>
+                        <div class="flex flex-col">
+                            <span class="font-mukta text-[11px] sm:text-xs text-stone uppercase tracking-wider font-bold">WPM</span>
+                            <span id="wpm-score" class="font-inter text-2xl font-extrabold text-[#2D8A14]">0</span>
+                        </div>
+                        <div class="h-8 w-px bg-ink/10"></div>
+                        <div class="flex flex-col">
+                            <span class="font-mukta text-[11px] sm:text-xs text-stone uppercase tracking-wider font-bold">Accuracy</span>
                             <span id="accuracy-score" class="font-inter text-2xl font-extrabold text-ink">100%</span>
-                        </li>
-                    </ul>
+                        </div>
+                        <div class="h-8 w-px bg-ink/10 hidden sm:block"></div>
+                        <div class="flex flex-col hidden sm:flex">
+                            <span class="font-mukta text-[11px] sm:text-xs text-stone uppercase tracking-wider font-bold">Mistakes</span>
+                            <span id="mistake-count" class="font-inter text-2xl font-extrabold text-rust">0</span>
+                        </div>
+                    </div>
                     
-                    <!-- Action -->
-                    <button id="try-again-btn" class="w-full sm:w-auto bg-rust text-white font-semibold font-inter text-sm px-8 py-3.5 rounded-full hover:bg-[#9A4826] active:scale-95 transition-all shadow-md flex items-center justify-center gap-2">
+                    <!-- Restart Action -->
+                    <button id="try-again-btn" type="button" class="bg-rust text-white font-semibold font-inter text-xs sm:text-sm px-6 py-3 rounded-full hover:bg-[#9A4826] active:scale-95 transition-all shadow-sm flex items-center justify-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
                         Restart Test
                     </button>
                 </div>
             </div>
 
-            <!-- Result Summary Modal / Banner (Hidden initially) -->
-            <div id="result-modal" class="hidden mt-8 p-6 bg-white rounded-[24px] border border-rust/20 shadow-md text-center">
+            <!-- Result Summary Modal (Hidden initially) -->
+            <div id="result-modal" class="hidden mt-6 p-6 sm:p-8 bg-[#FAF8F3] rounded-[24px] border border-rust/30 shadow-md text-center transition-all">
                 <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-rust/10 text-rust mb-3">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 </div>
-                <h3 class="font-inter text-2xl font-bold text-ink mb-1" id="result-title">Time's Up!</h3>
-                <p class="font-mukta text-stone text-sm max-w-md mx-auto mb-4" id="result-desc">Here is your typing test summary:</p>
+                <h3 class="font-inter text-2xl font-bold text-ink mb-1">Time's Up!</h3>
+                <p class="font-mukta text-stone text-sm max-w-md mx-auto mb-5">Here is your typing test performance summary:</p>
                 
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-lg mx-auto mb-6">
-                    <div class="bg-black/5 p-3 rounded-2xl">
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3.5 max-w-lg mx-auto mb-6">
+                    <div class="bg-white p-3.5 rounded-2xl border border-ink/5 shadow-xs">
                         <div class="text-xs text-stone font-semibold">Speed</div>
-                        <div class="text-xl font-bold text-rust" id="modal-wpm">0 WPM</div>
+                        <div class="text-2xl font-extrabold text-rust mt-0.5" id="modal-wpm">0 WPM</div>
                     </div>
-                    <div class="bg-black/5 p-3 rounded-2xl">
+                    <div class="bg-white p-3.5 rounded-2xl border border-ink/5 shadow-xs">
                         <div class="text-xs text-stone font-semibold">Accuracy</div>
-                        <div class="text-xl font-bold text-[#47AB19]" id="modal-acc">100%</div>
+                        <div class="text-2xl font-extrabold text-[#2D8A14] mt-0.5" id="modal-acc">100%</div>
                     </div>
-                    <div class="bg-black/5 p-3 rounded-2xl">
+                    <div class="bg-white p-3.5 rounded-2xl border border-ink/5 shadow-xs">
                         <div class="text-xs text-stone font-semibold">Characters</div>
-                        <div class="text-xl font-bold text-ink" id="modal-cpm">0 CPM</div>
+                        <div class="text-2xl font-extrabold text-ink mt-0.5" id="modal-cpm">0 CPM</div>
                     </div>
-                    <div class="bg-black/5 p-3 rounded-2xl">
+                    <div class="bg-white p-3.5 rounded-2xl border border-ink/5 shadow-xs">
                         <div class="text-xs text-stone font-semibold">Errors</div>
-                        <div class="text-xl font-bold text-red-500" id="modal-mistakes">0</div>
+                        <div class="text-2xl font-extrabold text-red-500 mt-0.5" id="modal-mistakes">0</div>
                     </div>
                 </div>
 
-                <button id="modal-restart-btn" class="bg-rust text-white font-semibold font-inter text-sm px-6 py-2.5 rounded-full hover:bg-[#9A4826] active:scale-95 transition-all shadow-sm">
+                <button id="modal-restart-btn" type="button" class="bg-rust text-white font-semibold font-inter text-sm px-8 py-3 rounded-full hover:bg-[#9A4826] active:scale-95 transition-all shadow-sm">
                     Play Again
                 </button>
             </div>
@@ -262,240 +272,289 @@
         </div>
     </footer>
 
-    <!-- Typing Game Scripts -->
+    <!-- Typing Game Engine -->
     <script>
-        const commonWords = ["the","of","to","and","a","in","is","it","you","that","he","was","for","on","are","as","with","his","they","I","at","be","this","have","from","or","one","had","by","word","but","not","what","all","were","we","when","your","can","said","there","use","an","each","which","she","do","how","their","if","will","up","other","about","out","many","then","them","these","so","some","her","would","make","like","him","into","time","has","look","two","more","write","go","see","number","no","way","could","people","my","than","first","water","been","call","who","oil","its","now","find","long","down","day","did","get","come","made","may","part","over","new","sound","take","only","little","work","know","place","year","live","me","back","give","most","very","after","thing","our","just","name","good","sentence","man","think","say","great","where","help","through","much","before","line","right","too","mean","old","any","same","tell","boy","follow","came","want","show","also","around","form","three","small","set","put","end","does","another","well","large","must","big","even","such","because","turn","here","why","ask","went","men","read","need","land","different","home","us","move","try","kind","hand","picture","again","change","off","play","spell","air","away","animal","house","point","page","letter","mother","answer","found","study","still","learn","should","America","world"];
+        const commonWords = [
+            "the","of","to","and","a","in","is","it","you","that","he","was","for","on","are","as","with","his",
+            "they","I","at","be","this","have","from","or","one","had","by","word","but","not","what","all","were",
+            "we","when","your","can","said","there","use","an","each","which","she","do","how","their","if","will",
+            "up","other","about","out","many","then","them","these","so","some","her","would","make","like","him",
+            "into","time","has","look","two","more","write","go","see","number","no","way","could","people","my",
+            "than","first","water","been","call","who","oil","its","now","find","long","down","day","did","get",
+            "come","made","may","part","over","new","sound","take","only","little","work","know","place","year",
+            "live","me","back","give","most","very","after","thing","our","just","name","good","sentence","man",
+            "think","say","great","where","help","through","much","before","line","right","too","mean","old","any",
+            "same","tell","boy","follow","came","want","show","also","around","form","three","small","set","put",
+            "end","does","another","well","large","must","big","even","such","because","turn","here","why","ask",
+            "went","men","read","need","land","different","home","us","move","try","kind","hand","picture","again",
+            "change","off","play","spell","air","away","animal","house","point","page","letter","mother","answer",
+            "found","study","still","learn","should","America","world"
+        ];
 
-        // ASMR Keyboard Sound Generator
-        let typeAudioCtx = null;
-        let cachedNoiseBuffer = null;
-        let isSoundEnabled = true;
+        // --- Low-latency Audio Synthesizer ---
+        let audioCtx = null;
+        let isSoundEnabled = localStorage.getItem('typing_sound_enabled') !== 'false';
 
-        function playTypingSound() {
-            if (!isSoundEnabled) return;
-            try {
-                if (!typeAudioCtx) {
-                    typeAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                }
-                if (typeAudioCtx.state === 'suspended') typeAudioCtx.resume();
-                
-                // "Thud" oscillator
-                const osc = typeAudioCtx.createOscillator();
-                const oscGain = typeAudioCtx.createGain();
-                osc.type = 'sine';
-                
-                const baseFreq = 80 + Math.random() * 20; 
-                osc.frequency.setValueAtTime(baseFreq, typeAudioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(10, typeAudioCtx.currentTime + 0.05);
-                
-                oscGain.gain.setValueAtTime(0, typeAudioCtx.currentTime);
-                oscGain.gain.linearRampToValueAtTime(0.3, typeAudioCtx.currentTime + 0.005);
-                oscGain.gain.exponentialRampToValueAtTime(0.01, typeAudioCtx.currentTime + 0.04);
-                
-                osc.connect(oscGain);
-                oscGain.connect(typeAudioCtx.destination);
-                
-                osc.start();
-                osc.stop(typeAudioCtx.currentTime + 0.05);
-
-                // "Click/Clack" noise
-                if (!cachedNoiseBuffer) {
-                    const bufferSize = typeAudioCtx.sampleRate * 0.04;
-                    cachedNoiseBuffer = typeAudioCtx.createBuffer(1, bufferSize, typeAudioCtx.sampleRate);
-                    const data = cachedNoiseBuffer.getChannelData(0);
-                    for (let i = 0; i < bufferSize; i++) {
-                        data[i] = Math.random() * 2 - 1;
-                    }
-                }
-                
-                const noise = typeAudioCtx.createBufferSource();
-                noise.buffer = cachedNoiseBuffer;
-                const noiseFilter = typeAudioCtx.createBiquadFilter();
-                noiseFilter.type = 'highpass';
-                noiseFilter.frequency.value = 2500 + Math.random() * 1000;
-                
-                const noiseGain = typeAudioCtx.createGain();
-                noiseGain.gain.setValueAtTime(0, typeAudioCtx.currentTime);
-                noiseGain.gain.linearRampToValueAtTime(0.08, typeAudioCtx.currentTime + 0.005);
-                noiseGain.gain.exponentialRampToValueAtTime(0.01, typeAudioCtx.currentTime + 0.03);
-                
-                noise.connect(noiseFilter);
-                noiseFilter.connect(noiseGain);
-                noiseGain.connect(typeAudioCtx.destination);
-                
-                noise.start();
-            } catch(e) {
-                // Audio context error handler
+        function initAudio() {
+            if (!audioCtx) {
+                const AudioClass = window.AudioContext || window.webkitAudioContext;
+                if (AudioClass) audioCtx = new AudioClass();
+            }
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
             }
         }
 
-        const typingText = document.querySelector("#typing-text");
-        const inpField = document.querySelector("#typing-input");
-        const tryAgainBtn = document.querySelector("#try-again-btn");
-        const timeTag = document.querySelector("#time-left");
-        const mistakeTag = document.querySelector("#mistake-count");
-        const wpmTag = document.querySelector("#wpm-score");
-        const cpmTag = document.querySelector("#cpm-score");
-        const accuracyTag = document.querySelector("#accuracy-score");
-        const typingContainer = document.querySelector("#typing-text-container");
-        const bestWpmTag = document.querySelector("#best-wpm");
-        const timeModeBtns = document.querySelectorAll(".time-mode-btn");
-        const resultModal = document.querySelector("#result-modal");
-        const modalRestartBtn = document.querySelector("#modal-restart-btn");
+        function playKeyClick() {
+            if (!isSoundEnabled || !audioCtx) return;
+            try {
+                const now = audioCtx.currentTime;
+                
+                // Crisp click oscillator
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.type = 'triangle';
+                const freq = 180 + Math.random() * 40;
+                osc.frequency.setValueAtTime(freq, now);
+                osc.frequency.exponentialRampToValueAtTime(40, now + 0.03);
+                
+                gain.gain.setValueAtTime(0.08, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
+                
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                osc.start(now);
+                osc.stop(now + 0.03);
+            } catch(e) {}
+        }
 
-        let timer = null;
+        // --- DOM Elements ---
+        const typingTextEl = document.getElementById("typing-text");
+        const typingContainer = document.getElementById("typing-text-container");
+        const inpField = document.getElementById("typing-input");
+        const tryAgainBtn = document.getElementById("try-again-btn");
+        const timeTag = document.getElementById("time-left");
+        const mistakeTag = document.getElementById("mistake-count");
+        const wpmTag = document.getElementById("wpm-score");
+        const accuracyTag = document.getElementById("accuracy-score");
+        const bestWpmTag = document.getElementById("best-wpm");
+        const timeModeBtns = document.querySelectorAll(".time-mode-btn");
+        const resultModal = document.getElementById("result-modal");
+        const modalRestartBtn = document.getElementById("modal-restart-btn");
+        const soundToggleBtn = document.getElementById("sound-toggle-btn");
+        const soundIconOn = document.getElementById("sound-icon-on");
+        const soundIconOff = document.getElementById("sound-icon-off");
+        const soundText = document.getElementById("sound-text");
+
+        // --- Game State ---
         let maxTime = 60;
         let timeLeft = maxTime;
-        let charIndex = 0;
-        let mistakes = 0;
+        let timer = null;
         let isTyping = false;
-        let cachedCharacters = [];
-        let totalTypedCharacters = 0;
         let startTime = 0;
+        
+        let wordsList = [];
+        let wordElements = [];
+        let currentWordIndex = 0;
+        let currentCharIndex = 0;
+        let totalTypedChars = 0;
+        let totalMistakes = 0;
+        let rawCorrectChars = 0;
 
-        // Load Best Score from LocalStorage
-        function getBestWpmKey() {
+        // --- Sound UI ---
+        function updateSoundUI() {
+            if (isSoundEnabled) {
+                soundIconOn.classList.remove('hidden');
+                soundIconOff.classList.add('hidden');
+                soundText.textContent = "Sound ON";
+            } else {
+                soundIconOn.classList.add('hidden');
+                soundIconOff.classList.remove('hidden');
+                soundText.textContent = "Sound OFF";
+            }
+        }
+        updateSoundUI();
+
+        soundToggleBtn.addEventListener('click', () => {
+            initAudio();
+            isSoundEnabled = !isSoundEnabled;
+            localStorage.setItem('typing_sound_enabled', isSoundEnabled);
+            updateSoundUI();
+            inpField.focus();
+        });
+
+        // --- High Scores ---
+        function getBestKey() {
             return `typing_best_wpm_${maxTime}`;
         }
-        function updateBestWpmDisplay() {
-            let bestWPM = parseInt(localStorage.getItem(getBestWpmKey()) || '0', 10);
-            if (bestWpmTag) bestWpmTag.textContent = bestWPM;
+        function updateBestScoreDisplay() {
+            const best = parseInt(localStorage.getItem(getBestKey()) || '0', 10);
+            bestWpmTag.textContent = best;
         }
-        updateBestWpmDisplay();
+        updateBestScoreDisplay();
 
-        // Focus text on keydown or click
-        document.addEventListener("keydown", (e) => {
-            if (e.key === 'Tab' || e.key === 'Enter') return;
-            // Prevent hijacking if user is typing in another input or focusing a button
-            if (document.activeElement !== inpField && document.activeElement.tagName !== 'BUTTON' && !e.ctrlKey && !e.metaKey && !e.altKey) {
-                inpField.focus();
-            }
-        });
-        
-        typingContainer.addEventListener("click", () => inpField.focus());
-
-        // Time Mode Select
+        // --- Mode Select ---
         timeModeBtns.forEach(btn => {
             btn.addEventListener("click", () => {
                 timeModeBtns.forEach(b => {
-                    b.classList.remove('bg-rust', 'text-white', 'shadow-sm');
+                    b.classList.remove('bg-rust', 'text-white', 'shadow-xs');
                     b.classList.add('text-stone');
                 });
-                btn.classList.add('bg-rust', 'text-white', 'shadow-sm');
+                btn.classList.add('bg-rust', 'text-white', 'shadow-xs');
                 btn.classList.remove('text-stone');
                 
                 maxTime = parseInt(btn.getAttribute('data-time'), 10);
-                updateBestWpmDisplay();
-                resetTypingGame();
+                updateBestScoreDisplay();
+                resetGame();
             });
         });
 
-        function loadParagraph() {
-            let textArray = [];
-            for (let i = 0; i < 300; i++) {
-                textArray.push(commonWords[Math.floor(Math.random() * commonWords.length)]);
+        // --- Generate Text with Word Wrapping & Line Tracking ---
+        function generateWords() {
+            wordsList = [];
+            for (let i = 0; i < 200; i++) {
+                wordsList.push(commonWords[Math.floor(Math.random() * commonWords.length)]);
             }
-            const randomText = textArray.join(" ").toLowerCase();
             
-            const htmlString = randomText
-                .split("")
-                .map(char => `<span>${char}</span>`)
-                .join("");
-            
-            typingText.innerHTML = htmlString;
-            cachedCharacters = typingText.querySelectorAll("span");
-            if (cachedCharacters.length > 0) {
-                cachedCharacters[0].classList.add("active");
+            typingTextEl.innerHTML = wordsList.map((w, wIdx) => {
+                const charsHtml = w.split('').map((c, cIdx) => `<span class="char" data-char="${c}">${c}</span>`).join('');
+                return `<span class="word" data-word-index="${wIdx}">${charsHtml}</span>`;
+            }).join('');
+
+            wordElements = Array.from(typingTextEl.querySelectorAll('.word'));
+            currentWordIndex = 0;
+            currentCharIndex = 0;
+            highlightCurrentChar();
+        }
+
+        function highlightCurrentChar() {
+            if (currentWordIndex >= wordElements.length) return;
+            const currentWordEl = wordElements[currentWordIndex];
+            const charElements = currentWordEl.querySelectorAll('.char');
+
+            // Remove current marker from all
+            const prevCurrent = typingTextEl.querySelector('.char.current');
+            if (prevCurrent) prevCurrent.classList.remove('current');
+
+            if (currentCharIndex < charElements.length) {
+                charElements[currentCharIndex].classList.add('current');
+            }
+
+            // Clean line scrolling
+            const containerTop = typingContainer.getBoundingClientRect().top;
+            const wordTop = currentWordEl.getBoundingClientRect().top;
+            const relativeOffset = wordTop - containerTop;
+
+            if (relativeOffset > 70) {
+                typingContainer.scrollTop += (relativeOffset - 30);
+            } else if (relativeOffset < 15) {
+                typingContainer.scrollTop = Math.max(0, typingContainer.scrollTop + relativeOffset - 25);
             }
         }
 
-        function initTyping() {
-            let val = inpField.value;
-            
-            if (timeLeft > 0 && charIndex < cachedCharacters.length) {
-                if (!isTyping) {
-                    startTime = performance.now();
-                    timer = setInterval(initTimer, 100);
-                    isTyping = true;
-                    if (resultModal) resultModal.classList.add('hidden');
-                }
-                
-                if (val.length !== charIndex) {
-                    playTypingSound();
-                }
+        // --- Core Input & Typing Engine ---
+        inpField.addEventListener('input', (e) => {
+            initAudio();
+            const val = inpField.value;
+            if (!val && val !== '') return;
 
-                if (val.length < charIndex) {
-                    while (charIndex > val.length) {
-                        charIndex--;
-                        if (cachedCharacters[charIndex].classList.contains("incorrect")) {
-                            mistakes--;
-                        }
-                        cachedCharacters[charIndex].className = "";
-                    }
-                } else {
-                    while (charIndex < val.length && charIndex < cachedCharacters.length) {
-                        let typedChar = val[charIndex];
-                        totalTypedCharacters++;
-                        if (cachedCharacters[charIndex].textContent === typedChar) {
-                            cachedCharacters[charIndex].classList.add("correct");
-                        } else {
-                            mistakes++;
-                            cachedCharacters[charIndex].classList.add("incorrect");
-                        }
-                        charIndex++;
-                    }
-                }
-                
-                const currentActive = typingText.querySelector("span.active");
-                if (currentActive) currentActive.classList.remove("active");
-                
-                if (charIndex < cachedCharacters.length) {
-                    let activeSpan = cachedCharacters[charIndex];
-                    activeSpan.classList.add("active");
-                    
-                    if (activeSpan.offsetTop > typingContainer.scrollTop + typingContainer.clientHeight - 40) {
-                        typingContainer.scrollTop = activeSpan.offsetTop - typingContainer.clientHeight / 2;
-                    } else if (activeSpan.offsetTop < typingContainer.scrollTop) {
-                        typingContainer.scrollTop = activeSpan.offsetTop - 20;
-                    }
-                } else {
-                    // Reached end of text
-                    finishGame();
-                    return;
-                }
-                
-                let timeElapsedMs = performance.now() - startTime;
-                let timeElapsedMinutes = timeElapsedMs / 60000;
-                if (timeElapsedMinutes > 0) {
-                    let wpm = Math.round(((charIndex - mistakes) / 5) / timeElapsedMinutes);
-                    wpm = wpm < 0 || !wpm || wpm === Infinity ? 0 : wpm;
-                    wpmTag.textContent = wpm;
-                }
-                
-                mistakeTag.textContent = mistakes;
-                let cpm = charIndex - mistakes;
-                cpmTag.textContent = cpm < 0 ? 0 : cpm;
+            if (!isTyping) {
+                isTyping = true;
+                startTime = performance.now();
+                timer = setInterval(stepTimer, 200);
+                resultModal.classList.add('hidden');
+            }
 
-                let accuracy = charIndex > 0 ? Math.round(((charIndex - mistakes) / charIndex) * 100) : 100;
-                accuracyTag.textContent = `${Math.max(0, accuracy)}%`;
-            } else if (charIndex >= cachedCharacters.length || timeLeft <= 0) {
+            playKeyClick();
+            processCurrentWordInput(val);
+        });
+
+        function processCurrentWordInput(val) {
+            if (currentWordIndex >= wordElements.length) {
                 finishGame();
+                return;
             }
+
+            const currentWordEl = wordElements[currentWordIndex];
+            const targetWord = wordsList[currentWordIndex];
+            const charElements = currentWordEl.querySelectorAll('.char');
+
+            // If user typed a space, submit the current word
+            if (val.endsWith(' ')) {
+                const typedWord = val.trim();
+                
+                // Compare word
+                if (typedWord === targetWord) {
+                    charElements.forEach(ch => {
+                        ch.className = 'char correct';
+                    });
+                    rawCorrectChars += targetWord.length + 1;
+                } else {
+                    currentWordEl.classList.add('error-word');
+                    totalMistakes++;
+                }
+
+                currentWordIndex++;
+                currentCharIndex = 0;
+                inpField.value = '';
+                highlightCurrentChar();
+                updateStats();
+                return;
+            }
+
+            // Update characters of the current word
+            currentCharIndex = val.length;
+            charElements.forEach((ch, idx) => {
+                if (idx < val.length) {
+                    if (val[idx] === targetWord[idx]) {
+                        ch.className = 'char correct';
+                    } else {
+                        ch.className = 'char incorrect';
+                        if (!ch.dataset.hasMistake) {
+                            totalMistakes++;
+                            ch.dataset.hasMistake = 'true';
+                        }
+                    }
+                } else {
+                    ch.className = 'char';
+                }
+            });
+
+            highlightCurrentChar();
+            updateStats();
         }
 
-        function initTimer() {
-            let timeElapsedMs = performance.now() - startTime;
-            let timeElapsedSecs = Math.floor(timeElapsedMs / 1000);
-            timeLeft = Math.max(0, maxTime - timeElapsedSecs);
+        function updateStats() {
+            const timeElapsedMinutes = isTyping ? (performance.now() - startTime) / 60000 : 0.001;
             
-            if (timeLeft > 0) {
-                timeTag.textContent = timeLeft;
-                let timeElapsedMinutes = timeElapsedMs / 60000;
-                let wpm = Math.round(((charIndex - mistakes) / 5) / timeElapsedMinutes);
-                wpm = wpm < 0 || !wpm || wpm === Infinity ? 0 : wpm;
-                wpmTag.textContent = wpm;
-            } else {
-                timeTag.textContent = 0;
+            // Calculate typed correct characters so far
+            let correctCharsInCurrent = 0;
+            if (currentWordIndex < wordElements.length) {
+                const currentWordEl = wordElements[currentWordIndex];
+                correctCharsInCurrent = currentWordEl.querySelectorAll('.char.correct').length;
+            }
+
+            const totalCorrectChars = rawCorrectChars + correctCharsInCurrent;
+            const wpm = timeElapsedMinutes > 0 ? Math.max(0, Math.round((totalCorrectChars / 5) / timeElapsedMinutes)) : 0;
+            
+            totalTypedChars = totalCorrectChars + totalMistakes;
+            const accuracy = totalTypedChars > 0 ? Math.max(0, Math.round((totalCorrectChars / totalTypedChars) * 100)) : 100;
+
+            wpmTag.textContent = wpm;
+            mistakeTag.textContent = totalMistakes;
+            accuracyTag.textContent = `${accuracy}%`;
+        }
+
+        function stepTimer() {
+            const timeElapsedSecs = Math.floor((performance.now() - startTime) / 1000);
+            timeLeft = Math.max(0, maxTime - timeElapsedSecs);
+            timeTag.textContent = timeLeft;
+
+            updateStats();
+
+            if (timeLeft <= 0) {
                 finishGame();
             }
         }
@@ -503,63 +562,86 @@
         function finishGame() {
             clearInterval(timer);
             isTyping = false;
-            inpField.value = "";
-            
-            let timeElapsedMs = isTyping ? performance.now() - startTime : maxTime * 1000;
-            if (timeElapsedMs < 1000) timeElapsedMs = maxTime * 1000; // prevent division by zero or too small
-            let timeElapsedMinutes = timeElapsedMs / 60000;
-            
-            let finalWpm = Math.round(((charIndex - mistakes) / 5) / timeElapsedMinutes);
-            finalWpm = finalWpm < 0 || !finalWpm || finalWpm === Infinity ? 0 : finalWpm;
-            let finalAcc = charIndex > 0 ? Math.round(((charIndex - mistakes) / charIndex) * 100) : 100;
-            finalAcc = Math.max(0, finalAcc);
-            let finalCpm = charIndex - mistakes;
-            finalCpm = finalCpm < 0 ? 0 : finalCpm;
+            inpField.blur();
+            inpField.value = '';
+
+            const timeElapsedMinutes = maxTime / 60;
+            let correctCharsInCurrent = 0;
+            if (currentWordIndex < wordElements.length) {
+                correctCharsInCurrent = wordElements[currentWordIndex].querySelectorAll('.char.correct').length;
+            }
+            const totalCorrectChars = rawCorrectChars + correctCharsInCurrent;
+            const finalWpm = Math.max(0, Math.round((totalCorrectChars / 5) / timeElapsedMinutes));
+            const finalCpm = Math.max(0, Math.round(totalCorrectChars / timeElapsedMinutes));
+            const totalAttempts = totalCorrectChars + totalMistakes;
+            const finalAcc = totalAttempts > 0 ? Math.max(0, Math.round((totalCorrectChars / totalAttempts) * 100)) : 100;
 
             // Check high score
-            let bestWPM = parseInt(localStorage.getItem(getBestWpmKey()) || '0', 10);
-            if (finalWpm > bestWPM) {
-                bestWPM = finalWpm;
-                localStorage.setItem(getBestWpmKey(), bestWPM);
-                if (bestWpmTag) bestWpmTag.textContent = bestWPM;
+            const best = parseInt(localStorage.getItem(getBestKey()) || '0', 10);
+            if (finalWpm > best) {
+                localStorage.setItem(getBestKey(), finalWpm);
+                bestWpmTag.textContent = finalWpm;
             }
 
             // Populate Modal
             document.getElementById('modal-wpm').textContent = `${finalWpm} WPM`;
             document.getElementById('modal-acc').textContent = `${finalAcc}%`;
             document.getElementById('modal-cpm').textContent = `${finalCpm} CPM`;
-            document.getElementById('modal-mistakes').textContent = `${mistakes}`;
-            
-            if (resultModal) {
-                resultModal.classList.remove('hidden');
-                resultModal.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
+            document.getElementById('modal-mistakes').textContent = `${totalMistakes}`;
+
+            resultModal.classList.remove('hidden');
+            resultModal.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
 
-        function resetTypingGame() {
+        function resetGame() {
             clearInterval(timer);
-            loadParagraph();
-            timeLeft = maxTime;
-            charIndex = 0;
-            mistakes = 0;
             isTyping = false;
-            totalTypedCharacters = 0;
-            inpField.value = "";
-            timeTag.textContent = timeLeft;
+            timeLeft = maxTime;
+            timeTag.textContent = maxTime;
             wpmTag.textContent = 0;
             mistakeTag.textContent = 0;
-            cpmTag.textContent = 0;
-            accuracyTag.textContent = "100%";
+            accuracyTag.textContent = '100%';
+            rawCorrectChars = 0;
+            totalMistakes = 0;
+            totalTypedChars = 0;
+            inpField.value = '';
             typingContainer.scrollTop = 0;
-            if (resultModal) resultModal.classList.add('hidden');
+            resultModal.classList.add('hidden');
+            generateWords();
             inpField.focus();
         }
 
+        // --- Event Listeners ---
+        typingContainer.addEventListener('click', () => {
+            initAudio();
+            inpField.focus();
+        });
+        document.getElementById('game-card').addEventListener('click', () => {
+            initAudio();
+            inpField.focus();
+        });
+
+        // Global hotkeys (Tab to restart, any regular key to focus)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                resetGame();
+                return;
+            }
+            if (document.activeElement !== inpField && document.activeElement.tagName !== 'BUTTON') {
+                if (!e.ctrlKey && !e.metaKey && !e.altKey && e.key.length === 1) {
+                    initAudio();
+                    inpField.focus();
+                }
+            }
+        });
+
+        tryAgainBtn.addEventListener('click', resetGame);
+        modalRestartBtn.addEventListener('click', resetGame);
+
+        // Init on page load
         document.addEventListener('DOMContentLoaded', () => {
-            loadParagraph();
-            inpField.addEventListener("input", initTyping);
-            tryAgainBtn.addEventListener("click", resetTypingGame);
-            if (modalRestartBtn) modalRestartBtn.addEventListener("click", resetTypingGame);
+            generateWords();
             inpField.focus();
         });
     </script>
