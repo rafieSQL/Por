@@ -108,6 +108,19 @@
                 transform: translateY(0);
             }
         }
+        /* Suppress browser video PiP buttons and control overlays */
+        video::-webkit-media-controls,
+        video::-webkit-media-controls-enclosure,
+        video::-webkit-media-controls-panel,
+        video::-webkit-media-controls-play-button,
+        video::-webkit-media-controls-start-playback-button,
+        video::-webkit-media-controls-overlay-play-button {
+            display: none !important;
+            opacity: 0 !important;
+            visibility: hidden !important;
+            -webkit-appearance: none !important;
+            pointer-events: none !important;
+        }
     </style>
 </head>
 <body class="antialiased selection:bg-rust selection:text-white">
@@ -283,8 +296,8 @@
                     <source src="assets/audio/jupiter_audio.m4a" type="audio/mp4">
                 </audio>
 
-                <!-- Background Video (Muted, heavily optimized for GPU) -->
-                <video id="bgVideo" preload="none" playsinline muted loop class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 pointer-events-none z-0">
+                <!-- Background Video (Muted, heavily optimized for GPU, no browser popups) -->
+                <video id="bgVideo" preload="none" playsinline muted loop disablePictureInPicture disableRemotePlayback controlsList="nodownload nofullscreen noremoteplayback noplaybackrate" tabindex="-1" class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 pointer-events-none select-none z-0">
                     <source src="assets/audio/jupiter_bg.mp4" type="video/mp4">
                 </video>
 
@@ -1028,6 +1041,33 @@
             const bgVideo = document.getElementById('bgVideo');
             const playerText = document.getElementById('playerTextContainer');
 
+            // Robust 60FPS Vinyl Rotation Engine
+            let vinylAngle = 0;
+            let vinylRafId = null;
+            let isVinylSpinning = false;
+
+            function rotateVinylLoop() {
+                if (!isVinylSpinning) return;
+                vinylAngle = (vinylAngle + 0.6) % 360;
+                if (vinylRecord) {
+                    vinylRecord.style.transform = `rotate(${vinylAngle}deg)`;
+                }
+                vinylRafId = requestAnimationFrame(rotateVinylLoop);
+            }
+
+            function startVinylRotation() {
+                if (isVinylSpinning) return;
+                isVinylSpinning = true;
+                if (vinylRecord) vinylRecord.classList.add('is-playing');
+                vinylRafId = requestAnimationFrame(rotateVinylLoop);
+            }
+
+            function stopVinylRotation() {
+                isVinylSpinning = false;
+                if (vinylRafId) cancelAnimationFrame(vinylRafId);
+                if (vinylRecord) vinylRecord.classList.remove('is-playing');
+            }
+
             function formatTime(seconds) {
                 if (isNaN(seconds)) return "0:00";
                 const m = Math.floor(seconds / 60);
@@ -1036,6 +1076,11 @@
             }
 
             if (audioTrack && playBtn) {
+                if (bgVideo) {
+                    bgVideo.disablePictureInPicture = true;
+                    bgVideo.disableRemotePlayback = true;
+                }
+
                 if (audioTrack.readyState >= 1) {
                     durationEl.innerText = formatTime(audioTrack.duration);
                 }
@@ -1046,12 +1091,10 @@
                 audioTrack.addEventListener('play', () => {
                     playIcon.classList.add('hidden');
                     pauseIcon.classList.remove('hidden');
-                    if (vinylRecord) {
-                        vinylRecord.classList.add('is-playing');
-                        vinylRecord.style.animationPlayState = 'running';
-                    }
-                    if (bgVideo) bgVideo.play().catch(()=>{});
+                    startVinylRotation();
                     if (bgVideo) {
+                        bgVideo.disablePictureInPicture = true;
+                        bgVideo.play().catch(()=>{});
                         bgVideo.classList.remove('opacity-0');
                         bgVideo.classList.add('opacity-20');
                     }
@@ -1061,12 +1104,21 @@
                 audioTrack.addEventListener('pause', () => {
                     playIcon.classList.remove('hidden');
                     pauseIcon.classList.add('hidden');
-                    if (vinylRecord) {
-                        vinylRecord.classList.remove('is-playing');
-                        vinylRecord.style.animationPlayState = 'paused';
-                    }
-                    if (bgVideo) bgVideo.pause();
+                    stopVinylRotation();
                     if (bgVideo) {
+                        bgVideo.pause();
+                        bgVideo.classList.remove('opacity-20');
+                        bgVideo.classList.add('opacity-0');
+                    }
+                    if (playerText) playerText.classList.remove('text-depressed');
+                });
+
+                audioTrack.addEventListener('ended', () => {
+                    playIcon.classList.remove('hidden');
+                    pauseIcon.classList.add('hidden');
+                    stopVinylRotation();
+                    if (bgVideo) {
+                        bgVideo.pause();
                         bgVideo.classList.remove('opacity-20');
                         bgVideo.classList.add('opacity-0');
                     }
