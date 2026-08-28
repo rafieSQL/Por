@@ -2,8 +2,12 @@
 <html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Projects - Muhammad Rafie Rabbani</title>
+    <meta name="description" content="A curated catalog of work and projects by Muhammad Rafie Rabbani.">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#FBF9F4">
+    <link rel="canonical" href="https://rafiesql.github.io/Por/projects.html">
     <link rel="icon" href="assets/images/favicon.svg" type="image/svg+xml">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -27,41 +31,17 @@
             }
         }
     </script>
-    <!-- Google Fonts -->
+    <!-- CSS & Fonts -->
+    <link rel="stylesheet" href="assets/css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Mukta:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
-    <style>
-        body { 
-            font-family: 'Mukta', sans-serif; 
-            background-color: #FBF9F4; 
-            color: #1A1714; 
-        }
-
-        .glass-pill {
-            background: rgba(255, 255, 255, 0.88);
-            border: 1px solid rgba(255, 255, 255, 0.95);
-            box-shadow: 0px 10px 30px -4px rgba(26, 23, 20, 0.06), 0px 2px 6px -1px rgba(26, 23, 20, 0.03);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-        }
-        .desktop-nav-item {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            line-height: 1;
-            height: 32px;
-            padding: 0 16px;
-            padding-bottom: 1px;
-            border-radius: 9999px;
-            transition: all 0.2s ease;
-        }
-    </style>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Mukta:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,600&display=swap" as="style">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Mukta:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
 </head>
 <body class="antialiased selection:bg-rust/20 selection:text-ink min-h-screen flex flex-col">
 
     <!-- Mobile Bottom Nav -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-ink/10 flex lg:hidden items-center justify-around px-2 pb-safe pt-2 z-50">
+    <nav aria-label="Mobile Navigation" class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-ink/10 flex lg:hidden items-center justify-around px-2 pb-safe pt-2 z-50">
         <a href="index.html#about" class="flex flex-col items-center justify-center gap-1 p-2 hover:text-rust transition-colors text-stone">
             <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
             <span class="text-[10px]">About</span>
@@ -89,15 +69,15 @@
     </nav>
 
     <!-- Desktop Nav -->
-    <nav class="fixed left-1/2 top-6 z-50 w-max -translate-x-1/2 p-1.5 rounded-full glass-pill hidden lg:flex items-center justify-center">
+    <nav aria-label="Desktop Navigation" class="fixed left-1/2 top-6 z-50 w-max -translate-x-1/2 p-1.5 rounded-full glass-pill hidden lg:flex items-center justify-center">
         <div class="flex items-center gap-1 font-mukta text-sm font-semibold text-ink">
-            <a href="index.html#about" class="desktop-nav-item hover:bg-[#F2F0E9] transition-colors">About</a>
-            <a href="index.html#music" class="desktop-nav-item hover:bg-[#F2F0E9] transition-colors">Music</a>
-            <a href="index.html#gallery" class="desktop-nav-item hover:bg-[#F2F0E9] transition-colors">Gallery</a>
-            <a href="index.html#organization" class="desktop-nav-item hover:bg-[#F2F0E9] transition-colors">Organization</a>
-            <a href="index.html#contact" class="desktop-nav-item hover:bg-[#F2F0E9] transition-colors">Contact Me</a>
-            <a href="projects.html" class="desktop-nav-item bg-[#F2F0E9] text-rust transition-colors font-semibold">Projects</a>
-            <a href="game.html" class="desktop-nav-item hover:bg-[#F2F0E9] transition-colors">Game</a>
+            <a href="index.html#about" class="nav-link desktop-link hover:bg-[#F2F0E9] transition-colors">About</a>
+            <a href="index.html#music" class="nav-link desktop-link hover:bg-[#F2F0E9] transition-colors">Music</a>
+            <a href="index.html#gallery" class="nav-link desktop-link hover:bg-[#F2F0E9] transition-colors">Gallery</a>
+            <a href="index.html#organization" class="nav-link desktop-link hover:bg-[#F2F0E9] transition-colors">Organization</a>
+            <a href="index.html#contact" class="nav-link desktop-link hover:bg-[#F2F0E9] transition-colors">Contact Me</a>
+            <a href="projects.html" class="nav-link desktop-link bg-[#F2F0E9] text-rust transition-colors font-semibold">Projects</a>
+            <a href="game.html" class="nav-link desktop-link hover:bg-[#F2F0E9] transition-colors">Game</a>
         </div>
     </nav>
 
@@ -128,7 +108,7 @@
                         <span class="px-2.5 py-1 bg-rust/10 text-rust text-[10px] font-bold uppercase tracking-wider rounded-full">Web Dev</span>
                         <span class="px-2.5 py-1 bg-ink/5 text-stone text-[10px] font-bold uppercase tracking-wider rounded-full">UI/UX</span>
                     </div>
-                    <h3 class="font-inter text-xl font-bold text-ink leading-tight mb-2 group-hover:text-rust transition-colors">Personal Portfolio Website</h3>
+                    <h2 class="font-inter text-xl font-bold text-ink leading-tight mb-2 group-hover:text-rust transition-colors">Personal Portfolio Website</h3>
                     <p class="font-mukta text-stone text-sm leading-relaxed mb-6 flex-1">
                         A highly interactive, performance-optimized digital portfolio built with Tailwind CSS. Features custom zero-dependency 3D carousels, custom audio players using raw Web APIs, and dynamic content.
                     </p>
@@ -149,7 +129,7 @@
                         <span class="px-2.5 py-1 bg-rust/10 text-rust text-[10px] font-bold uppercase tracking-wider rounded-full">Web Game</span>
                         <span class="px-2.5 py-1 bg-ink/5 text-stone text-[10px] font-bold uppercase tracking-wider rounded-full">Audio API</span>
                     </div>
-                    <h3 class="font-inter text-xl font-bold text-ink leading-tight mb-2 group-hover:text-rust transition-colors">Typing Speed Test Game</h3>
+                    <h2 class="font-inter text-xl font-bold text-ink leading-tight mb-2 group-hover:text-rust transition-colors">Typing Speed Test Game</h3>
                     <p class="font-mukta text-stone text-sm leading-relaxed mb-6 flex-1">
                         A standalone interactive typing game featuring synthesized mechanical keyboard ASMR sounds using the Web Audio API, real-time WPM/CPM calculation, error tracking, and custom timer modes.
                     </p>
@@ -166,8 +146,8 @@
                     <svg class="w-12 h-12 text-stone/20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"/></svg>
                 </div>
                 <div class="p-6 flex flex-col flex-1 items-center justify-center text-center">
-                    <h3 class="font-inter text-lg font-bold text-ink/40 mb-1">More Projects Coming Soon</h3>
-                    <p class="font-mukta text-stone/60 text-sm">Currently building the next big thing.</p>
+                    <h2 class="font-inter text-lg font-bold text-ink/60 mb-1">More Projects Coming Soon</h2>
+                    <p class="font-mukta text-stone/80 text-sm">Currently building the next big thing.</p>
                 </div>
             </div>
 

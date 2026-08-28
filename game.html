@@ -2,8 +2,12 @@
 <html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Typing Speed Test - Muhammad Rafie Rabbani</title>
+    <meta name="description" content="Play the Typing Speed Test by Muhammad Rafie Rabbani. Test your typing speed with custom mechanical keyboard sounds and real-time stats.">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#FBF9F4">
+    <link rel="canonical" href="https://rafiesql.github.io/Por/game.html">
     <link rel="icon" href="assets/images/favicon.svg" type="image/svg+xml">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -27,36 +31,13 @@
             }
         }
     </script>
-    <!-- Google Fonts -->
+    <!-- CSS & Fonts -->
+    <link rel="stylesheet" href="assets/css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Mukta:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Mukta:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,600&display=swap" as="style">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Mukta:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
     <style>
-        body { 
-            font-family: 'Mukta', sans-serif; 
-            background-color: #FBF9F4; 
-            color: #1A1714; 
-        }
-
-        .glass-pill {
-            background: rgba(255, 255, 255, 0.88);
-            border: 1px solid rgba(255, 255, 255, 0.95);
-            box-shadow: 0px 10px 30px -4px rgba(26, 23, 20, 0.06), 0px 2px 6px -1px rgba(26, 23, 20, 0.03);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-        }
-        .desktop-nav-item {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            line-height: 1;
-            height: 32px;
-            padding: 0 16px;
-            padding-bottom: 1px;
-            border-radius: 9999px;
-            transition: all 0.2s ease;
-        }
-
         /* Typing Game Styles */
         #typing-text-container::-webkit-scrollbar {
             width: 14px;
@@ -80,11 +61,11 @@
             position: relative;
         }
         #typing-text span.correct {
-            color: #47AB19;
+            color: #2D8A14;
             font-weight: 600;
         }
         #typing-text span.incorrect {
-            color: #cb3439;
+            color: #9E1C23;
             background: #ffc0cb;
             border-radius: 4px;
         }
@@ -110,7 +91,7 @@
 <body class="antialiased selection:bg-rust/20 selection:text-ink min-h-screen flex flex-col">
 
     <!-- Mobile Bottom Nav -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-ink/10 flex lg:hidden items-center justify-around px-2 pb-safe pt-2 z-50">
+    <nav aria-label="Mobile Navigation" class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-ink/10 flex lg:hidden items-center justify-around px-2 pb-safe pt-2 z-50">
         <a href="index.html#about" class="flex flex-col items-center justify-center gap-1 p-2 hover:text-rust transition-colors text-stone">
             <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
             <span class="text-[10px]">About</span>
@@ -128,7 +109,7 @@
             <span class="text-[10px]">Org</span>
         </a>
         <a href="projects.html" class="flex flex-col items-center justify-center gap-1 p-2 hover:text-rust transition-colors text-stone">
-            <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
             <span class="text-[10px]">Projects</span>
         </a>
         <a href="game.html" class="flex flex-col items-center justify-center gap-1 p-2 text-rust transition-colors font-semibold">
@@ -138,15 +119,15 @@
     </nav>
 
     <!-- Desktop Nav -->
-    <nav class="fixed left-1/2 top-6 z-50 w-max -translate-x-1/2 p-1.5 rounded-full glass-pill hidden lg:flex items-center justify-center">
+    <nav aria-label="Desktop Navigation" class="fixed left-1/2 top-6 z-50 w-max -translate-x-1/2 p-1.5 rounded-full glass-pill hidden lg:flex items-center justify-center">
         <div class="flex items-center gap-1 font-mukta text-sm font-semibold text-ink">
-            <a href="index.html#about" class="desktop-nav-item hover:bg-[#F2F0E9] transition-colors">About</a>
-            <a href="index.html#music" class="desktop-nav-item hover:bg-[#F2F0E9] transition-colors">Music</a>
-            <a href="index.html#gallery" class="desktop-nav-item hover:bg-[#F2F0E9] transition-colors">Gallery</a>
-            <a href="index.html#organization" class="desktop-nav-item hover:bg-[#F2F0E9] transition-colors">Organization</a>
-            <a href="index.html#contact" class="desktop-nav-item hover:bg-[#F2F0E9] transition-colors">Contact Me</a>
-            <a href="projects.html" class="desktop-nav-item hover:bg-[#F2F0E9] transition-colors">Projects</a>
-            <a href="game.html" class="desktop-nav-item bg-[#F2F0E9] text-rust transition-colors font-semibold">Game</a>
+            <a href="index.html#about" class="nav-link desktop-link hover:bg-[#F2F0E9] transition-colors">About</a>
+            <a href="index.html#music" class="nav-link desktop-link hover:bg-[#F2F0E9] transition-colors">Music</a>
+            <a href="index.html#gallery" class="nav-link desktop-link hover:bg-[#F2F0E9] transition-colors">Gallery</a>
+            <a href="index.html#organization" class="nav-link desktop-link hover:bg-[#F2F0E9] transition-colors">Organization</a>
+            <a href="index.html#contact" class="nav-link desktop-link hover:bg-[#F2F0E9] transition-colors">Contact Me</a>
+            <a href="projects.html" class="nav-link desktop-link hover:bg-[#F2F0E9] transition-colors">Projects</a>
+            <a href="game.html" class="nav-link desktop-link bg-[#F2F0E9] text-rust transition-colors font-semibold">Game</a>
         </div>
     </nav>
 
@@ -370,14 +351,23 @@
         let isTyping = false;
         let cachedCharacters = [];
         let totalTypedCharacters = 0;
+        let startTime = 0;
 
         // Load Best Score from LocalStorage
-        let bestWPM = parseInt(localStorage.getItem('typing_best_wpm') || '0', 10);
-        if (bestWpmTag) bestWpmTag.innerText = bestWPM;
+        function getBestWpmKey() {
+            return `typing_best_wpm_${maxTime}`;
+        }
+        function updateBestWpmDisplay() {
+            let bestWPM = parseInt(localStorage.getItem(getBestWpmKey()) || '0', 10);
+            if (bestWpmTag) bestWpmTag.textContent = bestWPM;
+        }
+        updateBestWpmDisplay();
 
         // Focus text on keydown or click
         document.addEventListener("keydown", (e) => {
-            if (document.activeElement !== inpField && !e.ctrlKey && !e.metaKey && !e.altKey) {
+            if (e.key === 'Tab' || e.key === 'Enter') return;
+            // Prevent hijacking if user is typing in another input or focusing a button
+            if (document.activeElement !== inpField && document.activeElement.tagName !== 'BUTTON' && !e.ctrlKey && !e.metaKey && !e.altKey) {
                 inpField.focus();
             }
         });
@@ -388,13 +378,14 @@
         timeModeBtns.forEach(btn => {
             btn.addEventListener("click", () => {
                 timeModeBtns.forEach(b => {
-                    b.classList.remove('bg-rust', 'text-white', 'shadow-xs');
+                    b.classList.remove('bg-rust', 'text-white', 'shadow-sm');
                     b.classList.add('text-stone');
                 });
-                btn.classList.add('bg-rust', 'text-white', 'shadow-xs');
+                btn.classList.add('bg-rust', 'text-white', 'shadow-sm');
                 btn.classList.remove('text-stone');
                 
                 maxTime = parseInt(btn.getAttribute('data-time'), 10);
+                updateBestWpmDisplay();
                 resetTypingGame();
             });
         });
@@ -423,7 +414,8 @@
             
             if (timeLeft > 0 && charIndex < cachedCharacters.length) {
                 if (!isTyping) {
-                    timer = setInterval(initTimer, 1000);
+                    startTime = performance.now();
+                    timer = setInterval(initTimer, 100);
                     isTyping = true;
                     if (resultModal) resultModal.classList.add('hidden');
                 }
@@ -444,7 +436,7 @@
                     while (charIndex < val.length && charIndex < cachedCharacters.length) {
                         let typedChar = val[charIndex];
                         totalTypedCharacters++;
-                        if (cachedCharacters[charIndex].innerText === typedChar) {
+                        if (cachedCharacters[charIndex].textContent === typedChar) {
                             cachedCharacters[charIndex].classList.add("correct");
                         } else {
                             mistakes++;
@@ -466,41 +458,58 @@
                     } else if (activeSpan.offsetTop < typingContainer.scrollTop) {
                         typingContainer.scrollTop = activeSpan.offsetTop - 20;
                     }
+                } else {
+                    // Reached end of text
+                    finishGame();
+                    return;
                 }
                 
-                let timeElapsed = maxTime - timeLeft;
-                if (timeElapsed > 0) {
-                    let wpm = Math.round(((charIndex - mistakes) / 5) / timeElapsed * 60);
+                let timeElapsedMs = performance.now() - startTime;
+                let timeElapsedMinutes = timeElapsedMs / 60000;
+                if (timeElapsedMinutes > 0) {
+                    let wpm = Math.round(((charIndex - mistakes) / 5) / timeElapsedMinutes);
                     wpm = wpm < 0 || !wpm || wpm === Infinity ? 0 : wpm;
-                    wpmTag.innerText = wpm;
+                    wpmTag.textContent = wpm;
                 }
                 
-                mistakeTag.innerText = mistakes;
+                mistakeTag.textContent = mistakes;
                 let cpm = charIndex - mistakes;
-                cpmTag.innerText = cpm < 0 ? 0 : cpm;
+                cpmTag.textContent = cpm < 0 ? 0 : cpm;
 
                 let accuracy = charIndex > 0 ? Math.round(((charIndex - mistakes) / charIndex) * 100) : 100;
-                accuracyTag.innerText = `${Math.max(0, accuracy)}%`;
+                accuracyTag.textContent = `${Math.max(0, accuracy)}%`;
+            } else if (charIndex >= cachedCharacters.length || timeLeft <= 0) {
+                finishGame();
             }
         }
 
         function initTimer() {
+            let timeElapsedMs = performance.now() - startTime;
+            let timeElapsedSecs = Math.floor(timeElapsedMs / 1000);
+            timeLeft = Math.max(0, maxTime - timeElapsedSecs);
+            
             if (timeLeft > 0) {
-                timeLeft--;
-                timeTag.innerText = timeLeft;
-                let wpm = Math.round(((charIndex - mistakes) / 5) / (maxTime - timeLeft) * 60);
+                timeTag.textContent = timeLeft;
+                let timeElapsedMinutes = timeElapsedMs / 60000;
+                let wpm = Math.round(((charIndex - mistakes) / 5) / timeElapsedMinutes);
                 wpm = wpm < 0 || !wpm || wpm === Infinity ? 0 : wpm;
-                wpmTag.innerText = wpm;
+                wpmTag.textContent = wpm;
             } else {
-                clearInterval(timer);
-                inpField.value = "";
+                timeTag.textContent = 0;
                 finishGame();
             }
         }
 
         function finishGame() {
-            let finalTime = maxTime;
-            let finalWpm = Math.round(((charIndex - mistakes) / 5) / finalTime * 60);
+            clearInterval(timer);
+            isTyping = false;
+            inpField.value = "";
+            
+            let timeElapsedMs = isTyping ? performance.now() - startTime : maxTime * 1000;
+            if (timeElapsedMs < 1000) timeElapsedMs = maxTime * 1000; // prevent division by zero or too small
+            let timeElapsedMinutes = timeElapsedMs / 60000;
+            
+            let finalWpm = Math.round(((charIndex - mistakes) / 5) / timeElapsedMinutes);
             finalWpm = finalWpm < 0 || !finalWpm || finalWpm === Infinity ? 0 : finalWpm;
             let finalAcc = charIndex > 0 ? Math.round(((charIndex - mistakes) / charIndex) * 100) : 100;
             finalAcc = Math.max(0, finalAcc);
@@ -508,17 +517,18 @@
             finalCpm = finalCpm < 0 ? 0 : finalCpm;
 
             // Check high score
+            let bestWPM = parseInt(localStorage.getItem(getBestWpmKey()) || '0', 10);
             if (finalWpm > bestWPM) {
                 bestWPM = finalWpm;
-                localStorage.setItem('typing_best_wpm', bestWPM);
-                if (bestWpmTag) bestWpmTag.innerText = bestWPM;
+                localStorage.setItem(getBestWpmKey(), bestWPM);
+                if (bestWpmTag) bestWpmTag.textContent = bestWPM;
             }
 
             // Populate Modal
-            document.getElementById('modal-wpm').innerText = `${finalWpm} WPM`;
-            document.getElementById('modal-acc').innerText = `${finalAcc}%`;
-            document.getElementById('modal-cpm').innerText = `${finalCpm} CPM`;
-            document.getElementById('modal-mistakes').innerText = `${mistakes}`;
+            document.getElementById('modal-wpm').textContent = `${finalWpm} WPM`;
+            document.getElementById('modal-acc').textContent = `${finalAcc}%`;
+            document.getElementById('modal-cpm').textContent = `${finalCpm} CPM`;
+            document.getElementById('modal-mistakes').textContent = `${mistakes}`;
             
             if (resultModal) {
                 resultModal.classList.remove('hidden');
@@ -535,11 +545,11 @@
             isTyping = false;
             totalTypedCharacters = 0;
             inpField.value = "";
-            timeTag.innerText = timeLeft;
-            wpmTag.innerText = 0;
-            mistakeTag.innerText = 0;
-            cpmTag.innerText = 0;
-            accuracyTag.innerText = "100%";
+            timeTag.textContent = timeLeft;
+            wpmTag.textContent = 0;
+            mistakeTag.textContent = 0;
+            cpmTag.textContent = 0;
+            accuracyTag.textContent = "100%";
             typingContainer.scrollTop = 0;
             if (resultModal) resultModal.classList.add('hidden');
             inpField.focus();
