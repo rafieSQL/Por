@@ -442,15 +442,15 @@
                 charElements[currentCharIndex].classList.add('current');
             }
 
-            // Clean line scrolling
-            const containerTop = typingContainer.getBoundingClientRect().top;
-            const wordTop = currentWordEl.getBoundingClientRect().top;
-            const relativeOffset = wordTop - containerTop;
+            // Clean line scrolling (Optimized to prevent layout thrashing)
+            const offsetTop = currentWordEl.offsetTop;
+            const scrollTop = typingContainer.scrollTop;
+            const relativeOffset = offsetTop - scrollTop;
 
             if (relativeOffset > 70) {
                 typingContainer.scrollTop += (relativeOffset - 30);
             } else if (relativeOffset < 15) {
-                typingContainer.scrollTop = Math.max(0, typingContainer.scrollTop + relativeOffset - 25);
+                typingContainer.scrollTop = Math.max(0, scrollTop + relativeOffset - 25);
             }
         }
 

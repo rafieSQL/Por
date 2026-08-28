@@ -316,7 +316,7 @@
                         </p>
                     </div>
 
-                    <div class="w-full lg:max-w-md flex items-center gap-2 sm:gap-4 bg-white/90 backdrop-blur-sm border border-ink/10 shadow-sm rounded-full p-1.5 sm:p-2 pr-3 sm:pr-5">
+                    <div class="w-full lg:max-w-md flex items-center gap-2 sm:gap-4 bg-white/90 border border-ink/10 shadow-sm rounded-full p-1.5 sm:p-2 pr-3 sm:pr-5">
                         <button id="customPlayBtn" type="button" aria-label="Play or pause audio" class="size-8 sm:size-10 shrink-0 bg-rust text-white rounded-full flex items-center justify-center hover:bg-rust/90 hover:scale-105 active:scale-95 transition-all shadow-md focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-rust">
                             <svg id="playIcon" class="size-4 sm:size-5 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                             <svg id="pauseIcon" class="size-4 sm:size-5 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
@@ -763,9 +763,10 @@
                 }
             });
             
-            // Kembalikan transisi setelah force reflow
-            void track.offsetHeight;
-            track.style.transition = 'transform 700ms cubic-bezier(0.4,0,0.2,1)';
+            // Kembalikan transisi secara asinkron tanpa force reflow
+            requestAnimationFrame(() => {
+                track.style.transition = 'transform 700ms cubic-bezier(0.4,0,0.2,1)';
+            });
         }
 
         function carouselNext() {
@@ -795,8 +796,9 @@
                 track.style.transition = 'none';
                 track.appendChild(track.firstElementChild);
                 track.style.transform = `translate3d(-${ACTIVE_OFFSET * slideOffset}px, 0, 0)`;
-                void track.offsetHeight;
-                isCarouselTransitioning = false;
+                requestAnimationFrame(() => {
+                    isCarouselTransitioning = false;
+                });
             }, 700);
 
             restartCarouselTimer();
@@ -814,10 +816,11 @@
             track.style.transition = 'none';
             track.insertBefore(track.lastElementChild, track.firstElementChild);
             track.style.transform = `translate3d(-${(ACTIVE_OFFSET + 1) * slideOffset}px, 0, 0)`;
-            void track.offsetHeight;
 
-            track.style.transition = 'transform 700ms cubic-bezier(0.4,0,0.2,1)';
-            track.style.transform = `translate3d(-${ACTIVE_OFFSET * slideOffset}px, 0, 0)`;
+            requestAnimationFrame(() => {
+                track.style.transition = 'transform 700ms cubic-bezier(0.4,0,0.2,1)';
+                track.style.transform = `translate3d(-${ACTIVE_OFFSET * slideOffset}px, 0, 0)`;
+            });
 
             const children = Array.from(track.children);
             children[ACTIVE_OFFSET + 1].style.transform = 'scale(0.88) rotateX(8deg)';
@@ -864,26 +867,22 @@
             const carouselContainer = document.getElementById('carouselContainer');
             const gallerySection = document.getElementById('gallery');
             if (carouselContainer && gallerySection) {
-                let wheelThrottle = false;
+                let lastWheelTime = 0;
                 gallerySection.addEventListener('wheel', (e) => {
-                    // Hanya izinkan scroll horizontal (mousepad kiri/kanan) untuk ganti foto
                     if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 15) {
-                        e.preventDefault();
-                        if (!wheelThrottle) {
-                            wheelThrottle = true;
-                            if (e.deltaX > 0) {
-                                carouselNext();
-                            } else {
-                                carouselPrev();
-                            }
-                            // Throttle 600ms agar 1 kali swipe/gulir tidak kelewat banyak foto
-                            setTimeout(() => {
-                                wheelThrottle = false;
-                            }, 600);
+                        const now = performance.now();
+                        if (now - lastWheelTime > 600) {
+                            lastWheelTime = now;
+                            requestAnimationFrame(() => {
+                                if (e.deltaX > 0) {
+                                    carouselNext();
+                                } else {
+                                    carouselPrev();
+                                }
+                            });
                         }
                     }
-                    // Jika scroll atas/bawah, biarkan halaman bergulir normal (tanpa preventDefault)
-                }, { passive: false });
+                }, { passive: true });
 
                 // Carousel: Desktop Cursor Drag (Geser menggunakan mouse drag)
                 let isMouseDown = false;
