@@ -44,6 +44,26 @@ body {
     -webkit-backface-visibility: hidden;
 }
 
+@keyframes spinVinyl {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.vinyl-spin {
+    animation: spinVinyl 12s linear infinite;
+    animation-play-state: paused;
+    will-change: transform;
+    transform-origin: center center;
+}
+
+.vinyl-spin.is-spinning {
+    animation-play-state: running;
+}
+
 #bgVideo {
     transform: translateZ(0);
     backface-visibility: hidden;

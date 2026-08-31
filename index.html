@@ -247,19 +247,19 @@
             <div id="playerContainer" class="relative bg-[#FBF9F4] rounded-[28px] overflow-hidden p-4 sm:p-6 lg:p-10 flex flex-row items-center gap-4 sm:gap-8 lg:gap-12 border border-ink/10 shadow-inner transition-colors duration-700">
                 
                 <!-- Audio Track (Lightweight Source of Truth) -->
-                <audio id="audioTrack" preload="metadata">
+                <audio id="audioTrack" preload="auto">
                     <source src="assets/audio/jupiter_audio.m4a" type="audio/mp4">
                 </audio>
 
                 <!-- Background Video (Muted, heavily optimized for GPU) -->
-                <video id="bgVideo" preload="metadata" playsinline muted loop class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 pointer-events-none z-0">
+                <video id="bgVideo" preload="auto" playsinline muted loop class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 pointer-events-none z-0">
                     <source src="assets/audio/jupiter_bg.mp4" type="video/mp4">
                 </video>
 
                 <!-- Left: Vinyl Graphic -->
                 <div class="flex justify-center shrink-0 relative z-10">
                     <div class="relative w-28 h-28 sm:w-48 sm:h-48 lg:w-56 lg:h-56 rounded-full shadow-2xl transition-transform duration-500 hover:scale-105">
-                        <div id="vinylRecord" class="w-full h-full relative origin-center animate-[spin_4s_linear_infinite]" style="animation-play-state: paused;">
+                        <div id="vinylRecord" class="w-full h-full relative origin-center vinyl-spin">
                             <!-- Vinyl disc -->
                             <img src="assets/images/vinyl.png" alt="Vinyl Record" class="w-full h-full object-contain z-10 relative pointer-events-none" loading="lazy" decoding="async">
                             <!-- Album Cover (Label) -->
@@ -831,12 +831,14 @@
             }, 100);
         });
 
+        // Initialize on DOM ready
         document.addEventListener('DOMContentLoaded', () => {
             initCardStack();
             startCardTimer();
             initCarousel();
             startCarouselTimer();
 
+            // Carousel: Mouse Wheel / Scroll Pad / Trackpad Scroll (Kiri/Kanan & Atas/Bawah)
             const carouselContainer = document.getElementById('carouselContainer');
             const gallerySection = document.getElementById('gallery');
             if (carouselContainer && gallerySection) {
@@ -858,6 +860,7 @@
                     }
                 }, { passive: false });
 
+                // Carousel: Desktop Cursor Drag
                 let isMouseDown = false;
                 let mouseStartX = 0;
                 gallerySection.addEventListener('mousedown', (e) => {
@@ -886,6 +889,7 @@
                     }
                 });
 
+                // Carousel: Mobile Touch Swiping
                 let touchStartX = 0;
                 carouselContainer.addEventListener('touchstart', e => {
                     touchStartX = e.changedTouches[0].screenX;
@@ -903,6 +907,7 @@
                 }, {passive: true});
             }
 
+            // CardStack Touch Swipe Support
             const cardStackContainer = document.getElementById('cardStack');
             if (cardStackContainer) {
                 let touchStartY = 0;
@@ -922,6 +927,7 @@
                 }, {passive: true});
             }
 
+            // Custom Audio Player Logic (Instant Play & Slow-Motion 360 Vinyl Rotation)
             const audioTrack = document.getElementById('audioTrack');
             const playBtn = document.getElementById('customPlayBtn');
             const playIcon = document.getElementById('playIcon');
@@ -959,31 +965,48 @@
 
                 playBtn.addEventListener('click', () => {
                     if (audioTrack.paused) {
+                        // Instant visual responsiveness
+                        playIcon.classList.add('hidden');
+                        pauseIcon.classList.remove('hidden');
+                        if (vinylRecord) {
+                            vinylRecord.classList.add('is-spinning');
+                            vinylRecord.style.animationPlayState = 'running';
+                        }
+                        if (playerText) playerText.classList.add('text-depressed');
+
                         if (bgVideo) {
                             bgVideo.currentTime = audioTrack.currentTime;
                             bgVideo.play().catch(() => {});
                             bgVideo.classList.remove('opacity-0');
                             bgVideo.classList.add('opacity-20');
                         }
-                        audioTrack.play().then(() => {
-                            playIcon.classList.add('hidden');
-                            pauseIcon.classList.remove('hidden');
-                            if (vinylRecord) vinylRecord.style.animationPlayState = 'running';
-                            if (playerText) playerText.classList.add('text-depressed');
-                        }).catch(error => {
+
+                        audioTrack.play().catch(error => {
                             console.error("Playback rejected", error);
+                            playIcon.classList.remove('hidden');
+                            pauseIcon.classList.add('hidden');
+                            if (vinylRecord) {
+                                vinylRecord.classList.remove('is-spinning');
+                                vinylRecord.style.animationPlayState = 'paused';
+                            }
+                            if (playerText) playerText.classList.remove('text-depressed');
                         });
                     } else {
+                        // Instant visual responsiveness on pause
+                        playIcon.classList.remove('hidden');
+                        pauseIcon.classList.add('hidden');
+                        if (vinylRecord) {
+                            vinylRecord.classList.remove('is-spinning');
+                            vinylRecord.style.animationPlayState = 'paused';
+                        }
+                        if (playerText) playerText.classList.remove('text-depressed');
+
                         audioTrack.pause();
                         if (bgVideo) {
                             bgVideo.pause();
                             bgVideo.classList.remove('opacity-20');
                             bgVideo.classList.add('opacity-0');
                         }
-                        playIcon.classList.remove('hidden');
-                        pauseIcon.classList.add('hidden');
-                        if (vinylRecord) vinylRecord.style.animationPlayState = 'paused';
-                        if (playerText) playerText.classList.remove('text-depressed');
                     }
                 });
 
@@ -1052,11 +1075,15 @@
                         bgVideo.classList.remove('opacity-20');
                         bgVideo.classList.add('opacity-0');
                     }
-                    if (vinylRecord) vinylRecord.style.animationPlayState = 'paused';
+                    if (vinylRecord) {
+                        vinylRecord.classList.remove('is-spinning');
+                        vinylRecord.style.animationPlayState = 'paused';
+                    }
                     if (playerText) playerText.classList.remove('text-depressed');
                 });
             }
 
+            // Section Lifecycle Manager (Stops background intervals & video when off-screen)
             let isAboutInView = true;
             let isGalleryInView = true;
             let isMusicInView = true;
@@ -1100,6 +1127,7 @@
                 }
             });
 
+            // Active Navigation Highlighting & Clean URL Hash Update
             const sections = document.querySelectorAll("section[id]");
             const navLinks = document.querySelectorAll(".nav-link");
             
