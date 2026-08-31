@@ -1,7 +1,5 @@
 /* Muhammad Rafie Rabbani - Portfolio Custom Stylesheet (Performance Optimized) */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Mukta:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,600&display=swap');
-
 :root {
     --color-cream: #FBF9F4;
     --color-ink: #1A1714;
@@ -12,7 +10,7 @@
 
 html {
     scroll-behavior: smooth;
-    text-rendering: optimizeLegibility;
+    text-rendering: optimizeSpeed;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -26,12 +24,28 @@ body {
     overflow-x: hidden;
 }
 
-/* GPU Accelerated Composite Layers */
-#carouselTrack,
-#cardStack > div,
-.carousel-img {
-    will-change: transform, opacity;
-    transform-style: preserve-3d;
+/* Lean GPU Layer Promotion & Fast Mobile Touch Response */
+#carouselTrack {
+    will-change: transform;
+    transform: translateZ(0);
+    touch-action: pan-y;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+#cardStack {
+    touch-action: pan-y;
+}
+
+#vinylRecord {
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+#bgVideo {
+    transform: translateZ(0);
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
 }
@@ -41,8 +55,9 @@ body {
     background: rgba(255, 255, 255, 0.88);
     border: 1px solid rgba(255, 255, 255, 0.95);
     box-shadow: 0px 10px 30px -4px rgba(26, 23, 20, 0.06), 0px 2px 6px -1px rgba(26, 23, 20, 0.03);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    transform: translateZ(0);
 }
 
 .desktop-link, .desktop-nav-item {
@@ -54,7 +69,7 @@ body {
     padding: 0 16px;
     padding-bottom: 1px;
     border-radius: 9999px;
-    transition: all 0.2s ease;
+    transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 /* Hero Entrance Animations */
